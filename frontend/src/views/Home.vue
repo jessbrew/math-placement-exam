@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     submitForm() {
-      this.$router.replace("Login");
+      this.$router.replace("login");
     },
   },
 };
