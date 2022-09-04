@@ -2,7 +2,6 @@ const express = require("express")
 const sql = require('mssql')
 var app = express()
 const router = express.Router()
-
 const dbConfig = {
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
@@ -16,34 +15,13 @@ const dbConfig = {
         trustServerCertificate: true,
     },
 };
-router.get("/answers", async (req, res) => {
-    console.log("hello")
-})
-router.get("/answers/topten", async (req, res) => {
+router.get("/questiontype/all", async (req, res) => {
     let result = []
     var dbConn = new sql.ConnectionPool(dbConfig);
     dbConn.connect().then(async function () {
         console.log("connected")
         var request = new sql.Request(dbConn);
-        request.query("select top 10 * from answers", function (err, data) {
-            let entries = data.recordset
-            let test = Array.from(entries)
-            for (i = 0; i < test.length; i++) {
-                result.push(test[i])
-            }
-            console.log(result)
-            res.send(result)
-        });
-    })
-})
-
-router.get("/answers/all", async (req, res) => {
-    let result = []
-    var dbConn = new sql.ConnectionPool(dbConfig);
-    dbConn.connect().then(async function () {
-        console.log("connected")
-        var request = new sql.Request(dbConn);
-        request.query("select * from answers", function (err, data) {
+        request.query("select * from question_types", function (err, data) {
             let entries = data.recordset
             let test = Array.from(entries)
             for (i = 0; i < test.length; i++) {
