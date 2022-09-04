@@ -124,6 +124,17 @@
         }
       }
     },
+    "/students/test": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/testquestions/all": {
       "get": {
         "description": "",
