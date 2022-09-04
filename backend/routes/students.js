@@ -31,7 +31,13 @@ router.get("/students/all", async (req, res) => {
                 result.push(test[i])
             }
             console.log(result)
-            res.send(result)
+            if (err) {
+                res.send("Bad request")
+                res.status(400)
+            }
+            else {
+                res.send(result)
+            }
         });
     })
 })
@@ -61,7 +67,13 @@ router.get("/students/:id", async (req, res) => {
                 result.push(test[i])
             }
             console.log(result)
-            res.send(result)
+            if (err) {
+                res.send("Bad request")
+                res.status(400)
+            }
+            else {
+                res.send(result).status(200)
+            }
         });
     })
 })
