@@ -83,7 +83,7 @@ router.post("/students/login", async (req, res) => {
     dbConn.connect().then(async function () {
         console.log("connected")
         var request = new sql.Request(dbConn);
-        request.query(`select * from students where wlc_id = ${req.params.id}`, function (err, data) {
+        request.query(`select * from students where wlc_id = ${req.body.id}`, function (err, data) {
             let entries = data.recordset
             let test = Array.from(entries)
             for (i = 0; i < test.length; i++) {
