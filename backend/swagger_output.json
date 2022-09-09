@@ -159,6 +159,20 @@
         }
       }
     },
+    "/students/login": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/testquestions/all": {
       "get": {
         "description": "",

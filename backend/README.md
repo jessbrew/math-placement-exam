@@ -8,6 +8,14 @@ In order to run this server you need a couple of things
 ### Running the project
 - Navigate to the ```/Backend/``` directory of the project.
 - Run ```npm install```, this will install of the NodeJS dependencies required for the project.
+- You will have to create a .env file for database connections. 
+```
+DB_PORT = 1433
+DB_HOST = localhost
+DB_USER = sa
+DB_PASS = [Your password]
+DB_Database = [Your db]
+```
 - If you want to generate the swagger page run ```npm swagger-autogen```. This will create the ```swagger_output.json``` contents.
 - Once this is done you can run ```npm start``` this will start the project on ```PORT:3000```. 
 
