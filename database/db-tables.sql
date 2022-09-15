@@ -102,15 +102,31 @@ CREATE TABLE [dbo].[students](
 	[most_advanced_class_grade] [varchar](10) NULL,
 	[desired_class] [varchar](100) NULL,
 	[math_in_last_year] [bit] NULL,
-	[student_guid] [varchar](36) NULL,
 	[test_id] [int] NULL,
 	[inserted_on] [datetime] NULL,
 	[test_completed] [bit] NULL,
+	[question_id] [int] NULL,
+	[updated_on] [datetime] NULL,
+	[is_active] [bit] NULL,
+	[test_started_on] [datetime] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[student_id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[students] ADD  CONSTRAINT [df_inserted]  DEFAULT (getdate()) FOR [inserted_on]
+GO
+
+ALTER TABLE [dbo].[students] ADD  CONSTRAINT [df_completed]  DEFAULT ((0)) FOR [test_completed]
+GO
+
+ALTER TABLE [dbo].[students] ADD  DEFAULT ((1)) FOR [is_active]
+GO
+
+ALTER TABLE [dbo].[students]  WITH CHECK ADD FOREIGN KEY([question_id])
+REFERENCES [dbo].[questions] ([question_id])
 GO
 
 ALTER TABLE [dbo].[students]  WITH CHECK ADD FOREIGN KEY([test_id])
