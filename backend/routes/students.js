@@ -42,18 +42,6 @@ router.get("/students/all", async (req, res) => {
     })
 })
 
-router.post("/students/test", async (req, res) => {
-    let result = []
-    var dbConn = new sql.ConnectionPool(dbConfig);
-    dbConn.connect().then(async function () {
-        console.log("connected")
-        var request = new sql.Request(dbConn);
-        request.query("INSERT INTO students(wlc_id,first_name, last_name) VALUES('1423527', 'Your', 'Mom')", function (err, data) {
-            res.send("Rows affected: " + data.rowsAffected)
-        })
-    })
-})
-
 router.get("/students/:id", async (req, res) => {
     let result = []
     var dbConn = new sql.ConnectionPool(dbConfig);
@@ -86,16 +74,42 @@ router.post("/students/login", async (req, res) => {
         request.query(`select * from students where wlc_id = ${req.body.id}`, function (err, data) {
             let entries = data.recordset
             let test = Array.from(entries)
-            for (i = 0; i < test.length; i++) {
-                result.push(test[i])
-            }
-            console.log(result)
             if (err) {
                 res.send("Bad request")
                 res.status(400)
             }
+            else if (test.length == 0) {
+                request.query(`INSERT INTO students(wlc_id, first_name, last_name) VALUES(${req.body.id}, '${req.body.fname}', '${req.body.lname}'); SELECT * from students where wlc_id = ${req.body.id}`, function (err, data) {
+                    let entries = data.recordset
+                    let test = Array.from(entries)
+                    let retObj = {
+                        new: true,
+                        student_id: test[0].student_id,
+                        question_id: null,
+                        test_id: null,
+                        completed: false,
+                        test_started_on: null,
+                        updated_on: null
+                    }
+                    res.send(retObj).status(200)
+                })
+                console.log("Inserted")
+            }
             else {
-                res.send(result).status(200)
+                for (i = 0; i < test.length; i++) {
+                    result.push(test[i])
+                }
+                console.log({ result })
+                let retObj = {
+                    new: false,
+                    student_id: result[0].student_id,
+                    question_id: null,
+                    test_id: null,
+                    completed: false,
+                    test_started_on: null,
+                    updated_on: null
+                }
+                res.send(retObj).status(200)
             }
         });
     })
