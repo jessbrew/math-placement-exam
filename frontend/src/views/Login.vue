@@ -33,16 +33,13 @@
     <v-dialog v-model="dialog" max-width="290">
       <v-card>
         <v-card-title>Exam Completed</v-card-title>
-        <v-card-text>You have already completed the Mathematics Placement Exam. If you believe this is in error, please contact PLACEHOLDER.</v-card-text>
+        <v-card-text>
+          You have already completed the Mathematics Placement Exam. If you
+          believe this is in error, please contact PLACEHOLDER.
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-           
-            text
-            @click="dialog = false"
-          >
-            OK
-          </v-btn>
+          <v-btn text @click="dialog = false"> OK </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -51,6 +48,7 @@
 
 <script>
 import MathTestButton from "@/components/general/MathTestButton.vue";
+import axios from 'axios';
 
 export default {
   name: "Login",
@@ -83,13 +81,32 @@ export default {
     validate() {
       this.$refs.login.validate();
     },
-    submitForm() {
+    async submitForm() {
       if (this.$refs.login.validate()) {
         // TODO: send data to API and only continue to questionnaire if new student
         // Do this if test is already completed
         //this.dialog = true;
         // Send student to their spot in the test if unfinished
-        this.$router.replace("questionnaire");
+        // this.$router.replace("questionnaire");
+        
+        // axios
+        //   .get("/students/all")
+        //   .then((response) => {
+        //     console.log(response)
+        //   })
+        //   .catch((err) =>{
+        //     console.log(err)
+        //   })
+        const student = { id: this.id, fname: this.fname, lname: this.lname };
+        axios
+          .post("/students/login", student)
+          .then((response) => {
+            console.log(response);
+            console.log(student);
+          })
+          .catch((err) =>{
+            console.log(err)
+          });
       }
     },
   },
