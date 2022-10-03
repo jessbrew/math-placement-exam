@@ -83,20 +83,6 @@ export default {
     },
     async submitForm() {
       if (this.$refs.login.validate()) {
-        // TODO: send data to API and only continue to questionnaire if new student
-        // Do this if test is already completed
-        //this.dialog = true;
-        // Send student to their spot in the test if unfinished
-        // this.$router.replace("questionnaire");
-        
-        // axios
-        //   .get("/students/all")
-        //   .then((response) => {
-        //     console.log(response)
-        //   })
-        //   .catch((err) =>{
-        //     console.log(err)
-        //   })
         const student = { id: this.id, fname: this.fname, lname: this.lname };
         axios
           .post("/students/login", student)
