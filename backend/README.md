@@ -6,7 +6,7 @@ In order to run this server you need a couple of things
 - Admin access on your machine
 
 ### Running the project
-- In the backend root directory, ```run npm install```, this will install of the NodeJS dependencies required for the project.
+- In the backend root directory, run ```npm install```, this will install of the NodeJS dependencies required for the project.
 - You will have to create a ```.env``` file for database connections. This will be in the base directory of the backend folder. 
 ```
 DB_PORT = 1433
