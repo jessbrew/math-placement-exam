@@ -1,5 +1,19 @@
 const express = require("express")
 const sql = require('mssql')
+const winston = require('winston')
+const { combine, timestamp, json } = winston.format;
+// const routes = require("../backend/routes")
+
+//Logging config
+const logger = winston.createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: combine(timestamp(), json()),
+    transports: [
+        new winston.transports.File({
+            filename: 'logger.log',
+        }),
+    ],
+});
 var app = express()
 const router = express.Router()
 const dbConfig = {
@@ -19,7 +33,7 @@ router.get("/studentanswers/all", async (req, res) => {
     let result = []
     var dbConn = new sql.ConnectionPool(dbConfig);
     dbConn.connect().then(async function () {
-        console.log("connected")
+        logger.info("connected")
         var request = new sql.Request(dbConn);
         request.query("select * from student_answers", function (err, data) {
             let entries = data.recordset

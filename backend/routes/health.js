@@ -3,6 +3,20 @@ const sql = require('mssql')
 const dotenv = require('dotenv')
 var app = express()
 const router = express.Router()
+const winston = require('winston')
+const { combine, timestamp, json } = winston.format;
+// const routes = require("../backend/routes")
+
+//Logging config
+const logger = winston.createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: combine(timestamp(), json()),
+    transports: [
+        new winston.transports.File({
+            filename: 'logger.log',
+        }),
+    ],
+});
 
 const dbConfig = {
     user: process.env.DB_USER,
@@ -22,9 +36,10 @@ function getConn() {
     var dbConn = new sql.ConnectionPool(dbConfig);
     // var dbConn = new sql.Connection(dbConfig);
     dbConn.connect().then(function () {
-        console.log("Connected")
+        logger
+        logger.info("Connected")
     }).catch(function (err) {
-        console.log(err);
+        logger.info(err);
     });
 }
 
