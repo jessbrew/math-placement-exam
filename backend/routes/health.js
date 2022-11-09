@@ -5,7 +5,6 @@ var app = express()
 const router = express.Router()
 const winston = require('winston')
 const { combine, timestamp, json } = winston.format;
-// const routes = require("../backend/routes")
 
 //Logging config
 const logger = winston.createLogger({
@@ -34,10 +33,8 @@ const dbConfig = {
 
 function getConn() {
     var dbConn = new sql.ConnectionPool(dbConfig);
-    // var dbConn = new sql.Connection(dbConfig);
     dbConn.connect().then(function () {
-        logger
-        logger.info("Connected")
+        logger.info("Connected to db at health endpoint")
     }).catch(function (err) {
         logger.info(err);
     });
@@ -45,6 +42,5 @@ function getConn() {
 
 router.get("/health", (req, res) => {
     res.send("This is your daily health check")
-    getConn()
 })
 module.exports = router

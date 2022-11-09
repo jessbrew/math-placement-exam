@@ -2,7 +2,6 @@ const express = require("express")
 const sql = require('mssql')
 const winston = require('winston')
 const { combine, timestamp, json } = winston.format;
-// const routes = require("../backend/routes")
 
 //Logging config
 const logger = winston.createLogger({
@@ -33,7 +32,7 @@ router.get("/questions/all", async (req, res) => {
     let result = []
     var dbConn = new sql.ConnectionPool(dbConfig);
     dbConn.connect().then(async function () {
-        logger.info("connected")
+        logger.info("connected to db at /questions/all")
         var request = new sql.Request(dbConn);
         request.query("select * from questions", function (err, data) {
             let entries = data.recordset
@@ -41,7 +40,7 @@ router.get("/questions/all", async (req, res) => {
             for (i = 0; i < test.length; i++) {
                 result.push(test[i])
             }
-            logger.info(result)
+            logger.info("Data pulled from /questions/all")
             res.send(result)
         });
     })

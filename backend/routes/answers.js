@@ -2,7 +2,6 @@ const express = require("express")
 const sql = require('mssql')
 const winston = require('winston')
 const { combine, timestamp, json } = winston.format;
-// const routes = require("../backend/routes")
 
 //Logging config
 const logger = winston.createLogger({
@@ -31,13 +30,18 @@ const dbConfig = {
     },
 };
 router.get("/answers", async (req, res) => {
-    logger.info("hello")
+    try {
+        res.sendStatus(200)
+
+    }
+    catch {
+        logger.error("Could not get the answers endpoint")
+    }
 })
 router.get("/answers/topten", async (req, res) => {
     let result = []
     var dbConn = new sql.ConnectionPool(dbConfig);
     dbConn.connect().then(async function () {
-        logger.info("connected")
         var request = new sql.Request(dbConn);
         request.query("select top 10 * from answers", function (err, data) {
             let entries = data.recordset
@@ -45,7 +49,7 @@ router.get("/answers/topten", async (req, res) => {
             for (i = 0; i < test.length; i++) {
                 result.push(test[i])
             }
-            logger.info(result)
+            logger.info("Pulled topten from answers")
             res.send(result)
         });
     })
@@ -55,7 +59,7 @@ router.get("/answers/all", async (req, res) => {
     let result = []
     var dbConn = new sql.ConnectionPool(dbConfig);
     dbConn.connect().then(async function () {
-        logger.info("connected")
+        logger.info("connected to db in /answers/all")
         var request = new sql.Request(dbConn);
         request.query("select * from answers", function (err, data) {
             let entries = data.recordset
@@ -63,7 +67,6 @@ router.get("/answers/all", async (req, res) => {
             for (i = 0; i < test.length; i++) {
                 result.push(test[i])
             }
-            logger.info(result)
             res.send(result)
         });
     })
