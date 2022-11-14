@@ -32,6 +32,7 @@ const dbConfig = {
 router.get("/answers", async (req, res) => {
     try {
         res.sendStatus(200)
+        logger._flush
 
     }
     catch {

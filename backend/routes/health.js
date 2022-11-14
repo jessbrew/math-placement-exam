@@ -34,13 +34,14 @@ const dbConfig = {
 function getConn() {
     var dbConn = new sql.ConnectionPool(dbConfig);
     dbConn.connect().then(function () {
-        logger.info("Connected to db at health endpoint")
+        logger.log("Connected to db at health endpoint")
     }).catch(function (err) {
         logger.info(err);
     });
 }
 
 router.get("/health", (req, res) => {
+    logger.info("Test debug")
     res.send("This is your daily health check")
 })
 module.exports = router
