@@ -83,12 +83,12 @@ export default {
     },
     async submitForm() {
       if (this.$refs.login.validate()) {
+        let url = process.env.VUE_APP_API + "students/login";
         const student = { id: this.id, fname: this.fname, lname: this.lname };
         axios
-          .post("/students/login", student)
-          .then((response) => {
-            console.log(response);
-            console.log(student);
+          .post(url, student)
+          .then(() => {
+            this.$router.replace("questionnaire");
           })
           .catch((err) =>{
             console.log(err)
