@@ -4,6 +4,9 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import "@babel/polyfill";
+import axios from "axios";
+
+Vue.prototype.$http = axios;
 
 Vue.config.productionTip = false;
 
