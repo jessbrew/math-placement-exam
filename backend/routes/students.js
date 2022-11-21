@@ -1,6 +1,19 @@
 const express = require("express");
 const req = require("express/lib/request");
 const sql = require('mssql')
+const winston = require('winston')
+const { combine, timestamp, json } = winston.format;
+
+//Logging config
+const logger = winston.createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: combine(timestamp(), json()),
+    transports: [
+        new winston.transports.File({
+            filename: 'logger.log',
+        }),
+    ],
+});
 var app = express()
 const router = express.Router()
 
@@ -18,35 +31,12 @@ const dbConfig = {
     },
 };
 
-router.get("/students/all", async (req, res) => {
-    let result = []
-    var dbConn = new sql.ConnectionPool(dbConfig);
-    dbConn.connect().then(async function () {
-        console.log("connected")
-        var request = new sql.Request(dbConn);
-        request.query("select * from students", function (err, data) {
-            let entries = data.recordset
-            let test = Array.from(entries)
-            for (i = 0; i < test.length; i++) {
-                result.push(test[i])
-            }
-            console.log(result)
-            if (err) {
-                res.send("Bad request")
-                res.status(400)
-            }
-            else {
-                res.send(result)
-            }
-        });
-    })
-})
 
 router.get("/students/:id", async (req, res) => {
     let result = []
     var dbConn = new sql.ConnectionPool(dbConfig);
     dbConn.connect().then(async function () {
-        console.log("connected")
+        logger.info("connected to db at /students/:id")
         var request = new sql.Request(dbConn);
         request.query(`select * from students where wlc_id = ${req.params.id}`, function (err, data) {
             let entries = data.recordset
@@ -54,7 +44,7 @@ router.get("/students/:id", async (req, res) => {
             for (i = 0; i < test.length; i++) {
                 result.push(test[i])
             }
-            console.log(result)
+            logger.info("Data pulled from /students/:id")
             if (err) {
                 res.send("Bad request")
                 res.status(400)
@@ -69,7 +59,7 @@ router.post("/students/login", async (req, res) => {
     let result = []
     var dbConn = new sql.ConnectionPool(dbConfig);
     dbConn.connect().then(async function () {
-        console.log("connected")
+        logger.info("connected to db at /students/loging")
         var request = new sql.Request(dbConn);
         request.query(`select * from students where wlc_id = ${req.body.id}`, function (err, data) {
             let entries = data.recordset
@@ -93,13 +83,13 @@ router.post("/students/login", async (req, res) => {
                     }
                     res.send(retObj).status(200)
                 })
-                console.log("Inserted")
+                logger.info("Inserted student")
             }
             else {
                 for (i = 0; i < test.length; i++) {
                     result.push(test[i])
                 }
-                console.log({ result })
+                logger.info({ result })
                 let retObj = {
                     new: false,
                     student_id: result[0].student_id,
