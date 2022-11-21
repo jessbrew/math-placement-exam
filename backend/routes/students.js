@@ -31,29 +31,6 @@ const dbConfig = {
     },
 };
 
-router.get("/students/all", async (req, res) => {
-    let result = []
-    var dbConn = new sql.ConnectionPool(dbConfig);
-    dbConn.connect().then(async function () {
-        logger.info("connected to db at /students/all")
-        var request = new sql.Request(dbConn);
-        request.query("select * from students", function (err, data) {
-            let entries = data.recordset
-            let test = Array.from(entries)
-            for (i = 0; i < test.length; i++) {
-                result.push(test[i])
-            }
-            logger.info("Data pulled from /students/all")
-            if (err) {
-                res.send("Bad request")
-                res.status(400)
-            }
-            else {
-                res.send(result)
-            }
-        });
-    })
-})
 
 router.get("/students/:id", async (req, res) => {
     let result = []

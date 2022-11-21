@@ -1,3 +1,4 @@
 .env
 coverage
 logger.log
+node_modules

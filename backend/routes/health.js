@@ -31,14 +31,14 @@ const dbConfig = {
     },
 };
 
-function getConn() {
-    var dbConn = new sql.ConnectionPool(dbConfig);
-    dbConn.connect().then(function () {
-        logger.log("Connected to db at health endpoint")
-    }).catch(function (err) {
-        logger.info(err);
-    });
-}
+// function getConn() {
+//     var dbConn = new sql.ConnectionPool(dbConfig);
+//     dbConn.connect().then(function () {
+//         logger.log("Connected to db at health endpoint")
+//     }).catch(function (err) {
+//         logger.info(err);
+//     });
+// }
 
 router.get("/health", (req, res) => {
     logger.info("Test debug")

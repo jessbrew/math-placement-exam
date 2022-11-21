@@ -56,21 +56,4 @@ router.get("/answers/topten", async (req, res) => {
     })
 })
 
-router.get("/answers/all", async (req, res) => {
-    let result = []
-    var dbConn = new sql.ConnectionPool(dbConfig);
-    dbConn.connect().then(async function () {
-        logger.info("connected to db in /answers/all")
-        var request = new sql.Request(dbConn);
-        request.query("select * from answers", function (err, data) {
-            let entries = data.recordset
-            let test = Array.from(entries)
-            for (i = 0; i < test.length; i++) {
-                result.push(test[i])
-            }
-            res.send(result)
-        });
-    })
-})
-
 module.exports = router
