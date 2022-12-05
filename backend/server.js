@@ -18,7 +18,7 @@ app.use("/", questions = require("./routes/questions.js"))
 app.use("/", question_type = require("./routes/question_type"))
 app.use("/", past_courses = require("./routes/past_courses.js"))
 app.use("/", student_past_courses = require("./routes/student_past_courses"))
-
+app.use("/", questionaire = require("./routes/questionaire"))
 
 
 module.exports = app

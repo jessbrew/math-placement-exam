@@ -1,7 +1,7 @@
 # How to run the Backend on a Windows Server
 In order run the backend of the Math Placement Test on a Windows server requires
 - Admin access to the server
-- MSSQL server install
+- MSSQL 2019 server install
     - Must be configured to allow connections through the server Browser
     - Listening on PORT 1433
     - Have the correct credentials in the .env file stored in the /api folder
@@ -25,3 +25,5 @@ To allow the process to run create a .bat file
     - Restart daily at a time that is convenient 
     - Allow to run without a user logged in 
     - have the pm2 instance call the .bat
+
+Once all of this is done the backend server will be running on port 3000 and the database will be running on port 1433. 
