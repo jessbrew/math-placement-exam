@@ -20,6 +20,11 @@ const routes = [
     name: "Questionnaire",
     component: () => import("../views/Questionnaire.vue"),
   },
+  {
+    path: "/allquestions",
+    name: "AllQuestions",
+    component: () => import("../views/AllQuestions.vue"),
+  }
 ];
 
 const router = new VueRouter({
