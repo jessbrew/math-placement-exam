@@ -36,11 +36,22 @@ router.post("/questionaire", async (req, res) => {
     let dbConn = new sql.ConnectionPool(dbConfig)
     receivedCourses = await axios.get("http://localhost:3000/pastcourse/all")
     pastCourses = Array.from(receivedCourses.data)
-    for (i = 0; i < pastCourses.length; i++) {
-        console.log(pastCourses[i])
-    }
-    logger.info(req.body)
-    res.send(pastCourses)
+    // logger.info(req.body)
+    console.log(req.body["student_id"])
+    dbConn.connect().then(async function () {
+        var request = new sql.Request(dbConn);
+        request.query(`select * from students where wlc_id = ${req.body["student_id"]}`, function (err, data) {
+            let entries = data.recordset
+            let test = Array.from(entries)
+            for (i = 0; i < test.length; i++) {
+                result.push(test[i])
+            }
+            console.log(pastCourses)
+            console.log(result)
+            res.send(result)
+        });
+    })
     // res.sendStatus(200)
 })
+
 module.exports = router
