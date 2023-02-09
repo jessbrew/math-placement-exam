@@ -1,4 +1,4 @@
- CREATE TABLE question_status (question_id INT NOT NULL, status BIT DEFAULT 0, description VARCHAR(250) DEFAULT NULL, PRIMARY KEY(question_id));
+ CREATE TABLE question_status (question_id INT NOT NULL, status BIT DEFAULT NULL, description VARCHAR(250) DEFAULT NULL, PRIMARY KEY(question_id));
 
  INSERT INTO question_status (question_id) VALUES (1);
  INSERT INTO question_status (question_id) VALUES (2);
