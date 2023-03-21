@@ -1,26 +1,25 @@
 <template>
   <span>
+    <vue-mathjax :formula="test"></vue-mathjax>
     <div class="question-text">{{questionLatex}}</div>
   </span>
 </template>
 
 <script>
-import MathJax from "@/assets/tex-svg.js"; // eslint-disable-line
-
+import {VueMathjax} from 'vue-mathjax'
 export default {
   name: "QuestionText",
   props: {
     questionLatex: null,
+    test: null
   },
-  methods: {
-    formatQuestion() {
-      console.log("HERE");
-      MathJax.typeset();
-    },
+  components: {
+    'vue-mathjax': VueMathjax
   },
   mounted() {
-    this.formatQuestion();
+    this.test = '$$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$';
   }
+
 };
 </script>
 

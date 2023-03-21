@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import MathJax from "@/assets/tex-svg.js"; // eslint-disable-line
 import MathTestHeader from "@/components/general/MathTestHeader.vue";
 export default {
   name: "App",
