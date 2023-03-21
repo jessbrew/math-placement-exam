@@ -1,8 +1,9 @@
 <template>
     <span>
-        <h1>All Questions</h1>
+        <h1 class="question-title">All Questions</h1>
         <div v-for="question in questions" :key="question.question_id">
             <full-question-block :question="question"></full-question-block>
+            <review-question-block :questionId="question.question_id"></review-question-block>
         </div>
     </span>
 </template>
@@ -10,6 +11,7 @@
 <script>
     import axios from 'axios';
     import FullQuestionBlock from '@/components/allQuestions/FullQuestionBlock.vue';
+    import ReviewQuestionBlock from '@/components/allQuestions/ReviewQuestionBlock.vue';
     export default {
         data() {
             return {
@@ -23,7 +25,14 @@
         },
         name: "AllQuestions",
         components: {
-            FullQuestionBlock
+            FullQuestionBlock,
+            ReviewQuestionBlock
         }
     };
 </script>
+
+<style scoped>
+.question-title {
+    margin-left: 20px;
+}
+</style>

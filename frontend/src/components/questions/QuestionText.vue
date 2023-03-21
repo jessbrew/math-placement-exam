@@ -1,7 +1,7 @@
 <template>
   <span>
-    <vue-mathjax :formula="test"></vue-mathjax>
-    <div class="question-text">{{questionLatex}}</div>
+    <vue-mathjax class="question-text" :formula="questionLatex"></vue-mathjax>
+    <!-- <div class="question-text">{{questionLatex}}</div> -->
   </span>
 </template>
 
@@ -17,7 +17,9 @@ export default {
     'vue-mathjax': VueMathjax
   },
   mounted() {
-    this.test = '$$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$';
+    this.test = '$ \\frac{6-2(-3^{2})}{-3} $'
+    //this.test = 'test this $ 10 - (3-7)+(-2) = $'
+    // this.test = '$$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$';
   }
 
 };
@@ -25,8 +27,10 @@ export default {
 
 <style scoped>
     .question-text {
-        padding: 10px;
+        padding: 20px;
         border: 1px solid black;
         max-width: 50%;
+        margin: 10px 0px 10px 0px;
+        display:block;
     }
 </style>
