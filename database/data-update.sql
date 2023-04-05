@@ -16,6 +16,27 @@ UPDATE past_courses
 SET test_type = 'Algebra'
 WHERE past_course_id = 4;
 
+UPDATE questions  
+SET question_text =  REPLACE(q.question_text , '\(', '$');
+FROM questions q 
+
+UPDATE questions  
+SET question_text =  REPLACE(q.question_text , '\)', '$');
+FROM questions q 
+
+UPDATE answers  
+SET answer_text  =  REPLACE(a.answer_text  , '\(', '$');
+FROM answers a 
+
+UPDATE answers  
+SET answer_text  =  REPLACE(a.answer_text  , '\)', '$');
+FROM answers a
+
+
+SELECT * FROM questions q;
+
+SELECT * FROM answers a;
+
 -- Selecting a test id based on past course Id
 
 --SELECT test_id FROM past_courses pc INNER JOIN tests t ON pc.test_type = t.test_name WHERE past_course_id = 1
