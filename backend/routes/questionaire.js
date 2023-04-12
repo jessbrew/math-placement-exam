@@ -1,36 +1,8 @@
 const express = require("express");
 const sql = require("mssql");
+const dbConn = require("../dbconnection.js");
+const logger = require("../logger.js");
 const router = express.Router();
-const winston = require("winston");
-const { combine, timestamp, json } = winston.format;
-// const axios = require("axios");
-// var app = express();
-// const req = require("express/lib/request");
-
-//Logging config
-const logger = winston.createLogger({
-    level: process.env.LOG_LEVEL || "info",
-    format: combine(timestamp(), json()),
-    transports: [
-        new winston.transports.File({
-            filename: "logger.log",
-        }),
-    ],
-});
-
-const dbConfig = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    server: process.env.DB_HOST,
-    database: process.env.DB_Database,
-    stream: false,
-    options: {
-        trustedConnection: true,
-        encrypt: true,
-        enableArithAbort: true,
-        trustServerCertificate: true,
-    },
-};
 
 router.post("/questionaire", async (req, res) => {
     // // Pass in
@@ -45,7 +17,6 @@ router.post("/questionaire", async (req, res) => {
     // }
 
     let result = [];
-    let dbConn = new sql.ConnectionPool(dbConfig);
     try {
         if (req.body["student_id"] === undefined || req.body["student_id"] === null) {
             res.status(400).send({ error: "Missing parameter" });

@@ -7,7 +7,7 @@
     "start": "node index.js",
     "test": "jest --coverage",
     "swagger-autogen": "node swagger.js",
-    "dev": "nodemon ./index.js localhost 3000"
+    "dev": "nodemon ./index.js localhost 3000"  
   },
   "author": "",
   "license": "ISC",
