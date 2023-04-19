@@ -98,6 +98,7 @@ CREATE TABLE [dbo].[students](
 	[wlc_id] [bigint] NULL,
 	[first_name] [varchar](200) NULL,
 	[last_name] [varchar](200) NULL,
+	[advisor] [varchar](200) NULL,
 	[most_advanced_class_taken] [varchar](200) NULL,
 	[most_advanced_class_grade] [varchar](10) NULL,
 	[desired_class] [varchar](100) NULL,

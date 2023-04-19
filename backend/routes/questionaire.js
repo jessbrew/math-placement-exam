@@ -1,19 +1,19 @@
 const express = require("express");
-const req = require("express/lib/request");
-const sql = require('mssql')
-var app = express()
-const router = express.Router()
-const axios = require("axios")
-const winston = require('winston')
+const sql = require("mssql");
+const router = express.Router();
+const winston = require("winston");
 const { combine, timestamp, json } = winston.format;
+// const axios = require("axios");
+// var app = express();
+// const req = require("express/lib/request");
 
 //Logging config
 const logger = winston.createLogger({
-    level: process.env.LOG_LEVEL || 'info',
+    level: process.env.LOG_LEVEL || "info",
     format: combine(timestamp(), json()),
     transports: [
         new winston.transports.File({
-            filename: 'logger.log',
+            filename: "logger.log",
         }),
     ],
 });
@@ -31,27 +31,123 @@ const dbConfig = {
         trustServerCertificate: true,
     },
 };
+
 router.post("/questionaire", async (req, res) => {
-    let result = []
-    let dbConn = new sql.ConnectionPool(dbConfig)
-    // receivedCourses = await axios.get("http://localhost:3000/pastcourse/all")
-    pastCourses = Array.from(receivedCourses.data)
-    // logger.info(req.body)
-    console.log(req.body['past_course_id'])
+    // // Pass in
+    // {
+    //     "student_id":1234567,
+    //     "past_course_id": 4,
+    //     "most_advanced_class_taken":"a",
+    //     "most_advanced_class_grade":"b",
+    //     "desired_class":"math",
+    //     "math_in_last_year":"one of them",
+    //     "advisor":"Dr. so and so"
+    // }
 
-    dbConn.connect().then(async function () {
-        var request = new sql.Request(dbConn);
-        request.query(`select * from tests where test_id = ${req.body["past_course_id"]}`, function (err, data) {
-            let entries = data.recordset
-            let test = Array.from(entries)
-            for (i = 0; i < test.length; i++) {
-                result.push(test[i])
-            }
-            console.log(result)
-            res.send(result)
-        });
-    })
-    // res.sendStatus(200)
-})
+    let result = [];
+    let dbConn = new sql.ConnectionPool(dbConfig);
+    try {
+        if (req.body["student_id"] === undefined || req.body["student_id"] === null) {
+            res.status(400).send({ error: "Missing parameter" });
+        } else if (req.body["past_course_id"] === undefined || req.body["past_course_id"] === null) {
+            res.status(400).send({ error: "Please include a valid course" });
+        } else if (req.body["most_advanced_class_taken"] === undefined || req.body["most_advanced_class_taken"] === null) {
+            res.status(400).send({ error: "Please include a valid course" });
+        } else if (req.body["most_advanced_class_grade"] === undefined || req.body["most_advanced_class_grade"] === null) {
+            res.status(400).send({ error: "Missing parameter" });
+        } else if (req.body["desired_class"] === undefined || req.body["desired_class"] === null) {
+            res.status(400).send({ error: "Missing parameter" });
+        } else if (req.body["math_in_last_year"] === undefined || req.body["math_in_last_year"] === null) {
+            res.status(400).send({ error: "Missing parameter" });
+        } else if (req.body["advisor"] === undefined || req.body["advisor"] === null) {
+            res.status(400).send({ error: "Missing parameter" });
+        } else {
+            dbConn.connect().then(async function () {
+                var request = new sql.Request(dbConn);
+                request.query(
+                    `UPDATE students 
+                SET advisor = '${req.body["advisor"]}', most_advanced_class_taken = '${req.body["most_advanced_class_taken"]}', 
+                most_advanced_class_grade = '${req.body["most_advanced_class_grade"]}', 
+                desired_class ='${req.body["desired_class"]}', math_in_last_year = '${req.body["math_in_last_year"]}'
+                WHERE wlc_id = '${req.body["student_id"]}';
 
-module.exports = router
+                SELECT test_id FROM past_courses pc 
+                INNER JOIN tests t ON pc.test_type = t.test_name 
+                WHERE past_course_id = ${req.body["past_course_id"]}`,
+                    function (err, data) {
+                        if (data === undefined) {
+                            throw TypeError("Content is undefined");
+                        }
+                        let test = data.recordset;
+                        test = Array.from(test);
+                        if (test[0] == undefined) {
+                            res.sendStatus(400);
+                        } else {
+                            let test_id = test[0]["test_id"];
+                            result.push({ test_id: test_id });
+                            request.query(
+                                `SELECT tq.question_id, q.question_text, a.answer_text 
+                        FROM test_questions tq 
+                        INNER JOIN tests t ON t.test_id = tq.test_id 
+                        INNER JOIN questions q ON q.question_id = tq.question_id
+                        INNER JOIN answers a ON a.question_id = q.question_id 
+                        WHERE t.test_id = ${test_id}`,
+                                function (err, data) {
+                                    let q = data.recordset;
+                                    let questions = Array.from(q);
+                                    let questionIdKeys = new Set();
+                                    let answerArray = [];
+                                    let qId = 0;
+                                    let qText = "";
+                                    for (i = 0; i < questions.length; ++i) {
+                                        if (questionIdKeys.has(questions[i]["question_id"]) && questionIdKeys.size != 0 && i != questions.size) {
+                                            answerArray.push(questions[i]["answer_text"]);
+                                        } else if (!questionIdKeys.has(questions[i]["question_id"]) && questionIdKeys.size != 0) {
+                                            let stage = {
+                                                question_id: qId,
+                                                question_text: qText,
+                                                answers: answerArray,
+                                            };
+                                            result.push(stage);
+                                            answerArray = [];
+                                            answerArray.push(questions[i]["answer_text"]);
+                                            qId = questions[i]["question_id"];
+                                            qText = questions[i]["question_text"];
+                                            questionIdKeys.add(questions[i]["question_id"]);
+                                        } else if (!questionIdKeys.has(questions[i]["question_id"]) && questionIdKeys.size == 0) {
+                                            qId = questions[i]["question_id"];
+                                            qText = questions[i]["question_text"];
+                                            answerArray.push(questions[i]["answer_text"]);
+                                            questionIdKeys.add(questions[i]["question_id"]);
+                                        } else if (questions[i]["question_id"] && questionIdKeys.size != 0) {
+                                            let stage = {
+                                                question_id: qId,
+                                                question_text: qText,
+                                                answers: answerArray,
+                                            };
+                                            result.push(stage);
+                                        } else {
+                                            answerArray.push(questions[i]["answer_text"]);
+                                        }
+                                        if (i == questions.length - 1) {
+                                            let stage = {
+                                                question_id: qId,
+                                                question_text: qText,
+                                                answers: answerArray,
+                                            };
+                                            result.push(stage);
+                                        }
+                                    }
+                                    res.send(result);
+                                }
+                            );
+                        }
+                    }
+                );
+            });
+        }
+    } catch (err) {
+        console.log(`Error: ${err}`);
+    }
+});
+module.exports = router;
