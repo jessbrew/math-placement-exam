@@ -4,37 +4,12 @@ const dbConn = require("../dbconnection.js");
 const logger = require("../logger.js");
 const router = express.Router();
 
-// router.post("/students/:id", async (req, res) => {
-//     try {
-//         if (req.body["wlc_id"] === undefined || req.body["wlc_id"] === null) {
-//             res.status(400).send({ error: "Missing parameter" });
-//         } else {
-//             let result = [];
-//             dbConn.connect().then(async function () {
-//                 logger.info("connected to db at /students/:id");
-//                 var request = new sql.Request(dbConn);
-//                 request.query(
-//                     `select * from students where wlc_id = ${req.params.id}`,
-//                     function (err, data) {
-//                         let entries = data.recordset;
-//                         let test = Array.from(entries);
-//                         for (i = 0; i < test.length; i++) {
-//                             result.push(test[i]);
-//                         }
-//                         logger.info("Data pulled from /students/:id");
-//                         if (err) {
-//                             res.send("Bad request");
-//                             res.status(400);
-//                         } else {
-//                             res.send(result).status(200);
-//                         }
-//                     }
-//                 );
-//             });
-//         }
-//     } catch {}
-// });
 router.post("/students/login", async (req, res) => {
+    // {
+    // "warrior_id": 1234321,
+    // "first_name": "Jimmy",
+    // "last_name": "Dean"
+    // }
     try {
         if (req.body["warrior_id"] === undefined || req.body["warrior_id"] === null) {
             res.status(400).send({ error: "Missing ID parameter" });

@@ -19,7 +19,7 @@ router.post("/questionaire", async (req, res) => {
     let result = [];
     try {
         if (req.body["student_id"] === undefined || req.body["student_id"] === null) {
-            res.status(400).send({ error: "Missing parameter" });
+            res.status(400).send({ error: "Missing ID parameter" });
         } else if (
             req.body["past_course_id"] === undefined ||
             req.body["past_course_id"] === null
