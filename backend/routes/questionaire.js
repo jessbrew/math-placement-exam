@@ -20,15 +20,27 @@ router.post("/questionaire", async (req, res) => {
     try {
         if (req.body["student_id"] === undefined || req.body["student_id"] === null) {
             res.status(400).send({ error: "Missing parameter" });
-        } else if (req.body["past_course_id"] === undefined || req.body["past_course_id"] === null) {
+        } else if (
+            req.body["past_course_id"] === undefined ||
+            req.body["past_course_id"] === null
+        ) {
             res.status(400).send({ error: "Please include a valid course" });
-        } else if (req.body["most_advanced_class_taken"] === undefined || req.body["most_advanced_class_taken"] === null) {
+        } else if (
+            req.body["most_advanced_class_taken"] === undefined ||
+            req.body["most_advanced_class_taken"] === null
+        ) {
             res.status(400).send({ error: "Please include a valid course" });
-        } else if (req.body["most_advanced_class_grade"] === undefined || req.body["most_advanced_class_grade"] === null) {
+        } else if (
+            req.body["most_advanced_class_grade"] === undefined ||
+            req.body["most_advanced_class_grade"] === null
+        ) {
             res.status(400).send({ error: "Missing parameter" });
         } else if (req.body["desired_class"] === undefined || req.body["desired_class"] === null) {
             res.status(400).send({ error: "Missing parameter" });
-        } else if (req.body["math_in_last_year"] === undefined || req.body["math_in_last_year"] === null) {
+        } else if (
+            req.body["math_in_last_year"] === undefined ||
+            req.body["math_in_last_year"] === null
+        ) {
             res.status(400).send({ error: "Missing parameter" });
         } else if (req.body["advisor"] === undefined || req.body["advisor"] === null) {
             res.status(400).send({ error: "Missing parameter" });
@@ -57,12 +69,16 @@ router.post("/questionaire", async (req, res) => {
                             let test_id = test[0]["test_id"];
                             result.push({ test_id: test_id });
                             request.query(
-                                `SELECT tq.question_id, q.question_text, a.answer_text 
+                                `SELECT tq.question_id, q.question_text, a.answer_text, a.answer_id 
                         FROM test_questions tq 
                         INNER JOIN tests t ON t.test_id = tq.test_id 
                         INNER JOIN questions q ON q.question_id = tq.question_id
                         INNER JOIN answers a ON a.question_id = q.question_id 
-                        WHERE t.test_id = ${test_id}`,
+                        WHERE t.test_id = ${test_id};
+
+                        UPDATE students 
+                        SET test_id = ${test_id}
+                        WHERE wlc_id = '${req.body["student_id"]}';`,
                                 function (err, data) {
                                     let q = data.recordset;
                                     let questions = Array.from(q);
@@ -71,9 +87,18 @@ router.post("/questionaire", async (req, res) => {
                                     let qId = 0;
                                     let qText = "";
                                     for (i = 0; i < questions.length; ++i) {
-                                        if (questionIdKeys.has(questions[i]["question_id"]) && questionIdKeys.size != 0 && i != questions.size) {
-                                            answerArray.push(questions[i]["answer_text"]);
-                                        } else if (!questionIdKeys.has(questions[i]["question_id"]) && questionIdKeys.size != 0) {
+                                        if (
+                                            questionIdKeys.has(questions[i]["question_id"]) &&
+                                            questionIdKeys.size != 0 &&
+                                            i != questions.size
+                                        ) {
+                                            answerArray.push(
+                                                `{${questions[i]["answer_id"]} : ${questions[i]["answer_text"]}}`
+                                            );
+                                        } else if (
+                                            !questionIdKeys.has(questions[i]["question_id"]) &&
+                                            questionIdKeys.size != 0
+                                        ) {
                                             let stage = {
                                                 question_id: qId,
                                                 question_text: qText,
@@ -81,16 +106,26 @@ router.post("/questionaire", async (req, res) => {
                                             };
                                             result.push(stage);
                                             answerArray = [];
-                                            answerArray.push(questions[i]["answer_text"]);
+                                            answerArray.push(
+                                                `{${questions[i]["answer_id"]} : ${questions[i]["answer_text"]}}`
+                                            );
                                             qId = questions[i]["question_id"];
                                             qText = questions[i]["question_text"];
                                             questionIdKeys.add(questions[i]["question_id"]);
-                                        } else if (!questionIdKeys.has(questions[i]["question_id"]) && questionIdKeys.size == 0) {
+                                        } else if (
+                                            !questionIdKeys.has(questions[i]["question_id"]) &&
+                                            questionIdKeys.size == 0
+                                        ) {
                                             qId = questions[i]["question_id"];
                                             qText = questions[i]["question_text"];
-                                            answerArray.push(questions[i]["answer_text"]);
+                                            answerArray.push(
+                                                `{${questions[i]["answer_id"]} : ${questions[i]["answer_text"]}}`
+                                            );
                                             questionIdKeys.add(questions[i]["question_id"]);
-                                        } else if (questions[i]["question_id"] && questionIdKeys.size != 0) {
+                                        } else if (
+                                            questions[i]["question_id"] &&
+                                            questionIdKeys.size != 0
+                                        ) {
                                             let stage = {
                                                 question_id: qId,
                                                 question_text: qText,
@@ -98,7 +133,9 @@ router.post("/questionaire", async (req, res) => {
                                             };
                                             result.push(stage);
                                         } else {
-                                            answerArray.push(questions[i]["answer_text"]);
+                                            answerArray.push(
+                                                `{${questions[i]["answer_id"]} : ${questions[i]["answer_text"]}}`
+                                            );
                                         }
                                         if (i == questions.length - 1) {
                                             let stage = {
@@ -109,6 +146,9 @@ router.post("/questionaire", async (req, res) => {
                                             result.push(stage);
                                         }
                                     }
+                                    request.query(
+                                        `UPDATE students SET start_time = GETDATE() WHERE wlc_id = '${req.body["student_id"]}';`
+                                    );
                                     res.send(result);
                                 }
                             );
