@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/questionaire", async (req, res) => {
     // // Pass in
     // {
-    //     "student_id":1234567,
+    //     "student_id":20,
     //     "past_course_id": 4,
     //     "most_advanced_class_taken":"a",
     //     "most_advanced_class_grade":"b",
@@ -52,7 +52,7 @@ router.post("/questionaire", async (req, res) => {
                 SET advisor = '${req.body["advisor"]}', most_advanced_class_taken = '${req.body["most_advanced_class_taken"]}', 
                 most_advanced_class_grade = '${req.body["most_advanced_class_grade"]}', 
                 desired_class ='${req.body["desired_class"]}', math_in_last_year = '${req.body["math_in_last_year"]}'
-                WHERE wlc_id = '${req.body["student_id"]}';
+                WHERE student_id = '${req.body["student_id"]}';
 
                 SELECT test_id FROM past_courses pc 
                 INNER JOIN tests t ON pc.test_type = t.test_name 
@@ -78,7 +78,7 @@ router.post("/questionaire", async (req, res) => {
 
                         UPDATE students 
                         SET test_id = ${test_id}
-                        WHERE wlc_id = '${req.body["student_id"]}';`,
+                        WHERE student_id = '${req.body["student_id"]}';`,
                                 function (err, data) {
                                     let q = data.recordset;
                                     let questions = Array.from(q);
@@ -147,7 +147,7 @@ router.post("/questionaire", async (req, res) => {
                                         }
                                     }
                                     request.query(
-                                        `UPDATE students SET start_time = GETDATE() WHERE wlc_id = '${req.body["student_id"]}';`
+                                        `UPDATE students SET start_time = GETDATE() WHERE student_id = '${req.body["student_id"]}';`
                                     );
                                     res.send(result);
                                 }

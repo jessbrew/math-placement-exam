@@ -37,6 +37,12 @@ SELECT * FROM questions q;
 
 SELECT * FROM answers a;
 
+ALTER TABLE students 
+ADD start_time DATETIME; 
+
+ALTER TABLE student_answers  
+ADD time_submitted DATETIME; 
+
 -- Selecting a test id based on past course Id
 
 --SELECT test_id FROM past_courses pc INNER JOIN tests t ON pc.test_type = t.test_name WHERE past_course_id = 1
