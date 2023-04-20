@@ -93,7 +93,7 @@ router.post("/questionaire", async (req, res) => {
                                             i != questions.size
                                         ) {
                                             answerArray.push(
-                                                `{${questions[i]["answer_id"]} : ${questions[i]["answer_text"]}}`
+                                                `{AnswerID:${questions[i]["answer_id"]}}, {AnswerText:${questions[i]["answer_text"]}}`
                                             );
                                         } else if (
                                             !questionIdKeys.has(questions[i]["question_id"]) &&
@@ -107,7 +107,7 @@ router.post("/questionaire", async (req, res) => {
                                             result.push(stage);
                                             answerArray = [];
                                             answerArray.push(
-                                                `{${questions[i]["answer_id"]} : ${questions[i]["answer_text"]}}`
+                                                `{AnswerID:${questions[i]["answer_id"]}}, {AnswerText:${questions[i]["answer_text"]}}`
                                             );
                                             qId = questions[i]["question_id"];
                                             qText = questions[i]["question_text"];
@@ -119,7 +119,7 @@ router.post("/questionaire", async (req, res) => {
                                             qId = questions[i]["question_id"];
                                             qText = questions[i]["question_text"];
                                             answerArray.push(
-                                                `{${questions[i]["answer_id"]} : ${questions[i]["answer_text"]}}`
+                                                `{AnswerID:${questions[i]["answer_id"]}}, {AnswerText:${questions[i]["answer_text"]}}`
                                             );
                                             questionIdKeys.add(questions[i]["question_id"]);
                                         } else if (
@@ -134,7 +134,7 @@ router.post("/questionaire", async (req, res) => {
                                             result.push(stage);
                                         } else {
                                             answerArray.push(
-                                                `{${questions[i]["answer_id"]} : ${questions[i]["answer_text"]}}`
+                                                `{AnswerID:${questions[i]["answer_id"]}}, {AnswerText:${questions[i]["answer_text"]}}`
                                             );
                                         }
                                         if (i == questions.length - 1) {
