@@ -1,9 +1,9 @@
 -- Add the tests
 INSERT INTO tests
 VALUES (1, 'Algebra',1200),
-(3, 'trigonometry',2400),
-(4, 'level3',3600),
-(5, 'level4',4500)
+(2, 'trigonometry',2400),
+(3, 'level3',3600),
+(4, 'level4',4500)
 
 -- Add question types
 INSERT INTO question_types 
@@ -630,7 +630,7 @@ VALUES (1, '$ -2 $',0),
 
 -- Insert past_courses
 INSERT INTO past_courses 
-VALUES (1, 'A course involving trigonometry: sine, cosine, tangent, etc.'),
-(2, 'A first course in calculus: Calculus AB in high school or first college calculus course (NOT PRECALCULUS)'),
-(3, 'A second course in calculus: Calculus BC in high school or second college calculus course'),
-(4, 'None')
+VALUES (1, 'A course involving trigonometry: sine, cosine, tangent, etc.', 'Trigonometry'),
+(2, 'A first course in calculus: Calculus AB in high school or first college calculus course (NOT PRECALCULUS)','level3'),
+(3, 'A second course in calculus: Calculus BC in high school or second college calculus course','level4'),
+(4, 'None','Algebra')
