@@ -107,6 +107,7 @@ CREATE TABLE [dbo].[students](
 	[math_in_last_year] [bit] NULL,
 	[student_guid][varchar](200) NULL,
 	[test_id] [int] NULL,
+	[question_id] [int] NULL,
 	[inserted_on] [datetime] NULL,
 	[test_completed] [bit] NULL,
 	[is_active] [bit] NULL,
@@ -175,5 +176,3 @@ GO
 ALTER TABLE [dbo].[student_answers]  WITH CHECK ADD FOREIGN KEY([student_id])
 REFERENCES [dbo].[students] ([student_id])
 GO
-
-
