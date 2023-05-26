@@ -26,7 +26,8 @@ export default {
 
 <style scoped>
   .full-question-block {
-    margin: 20px;
+    margin: 25px;
+    margin-bottom: 200px;
     min-width: 30%;
     display: inline-block;
   }

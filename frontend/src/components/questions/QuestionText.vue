@@ -15,13 +15,7 @@ export default {
   },
   components: {
     'vue-mathjax': VueMathjax
-  },
-  mounted() {
-    this.test = '$ \\frac{6-2(-3^{2})}{-3} $'
-    //this.test = 'test this $ 10 - (3-7)+(-2) = $'
-    // this.test = '$$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$';
   }
-
 };
 </script>
 

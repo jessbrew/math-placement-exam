@@ -14,14 +14,14 @@ export default {
   components: {
     MathTestHeader,
   },
-  beforeMount() {
-    // Does not work without user interaction
-    window.addEventListener("beforeunload", function (event) {
-      console.log("User tried to leave the page."); // Replace with something else
-      event.returnValue = "Are you sure you want to leave the test?"; // Older browsers apparently show this on prompt
-      event.preventDefault();
-    });
-  },
+  // beforeMount() {
+  //   // Does not work without user interaction
+  //   window.addEventListener("beforeunload", function (event) {
+  //     console.log("User tried to leave the page."); // Replace with something else
+  //     event.returnValue = "Are you sure you want to leave the test?"; // Older browsers apparently show this on prompt
+  //     event.preventDefault();
+  //   });
+  // },
 };
 </script>
 
