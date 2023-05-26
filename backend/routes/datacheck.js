@@ -121,12 +121,13 @@ router.post("/datacheck/update", async (req, res) => {
     //     "description":"This is a test"
     // }
     let result = [];
-    var dbConn = new sql.ConnectionPool(dbConfig);
+    console.log(req.body["question_id"]);
     dbConn.connect().then(async function () {
         var request = new sql.Request(dbConn);
         request.query(
             `UPDATE question_status SET status = ${req.body["status"]}, description = '${req.body["description"]}' WHERE question_id = ${req.body["question_id"]}; SELECT * FROM question_status WHERE question_id = ${req.body["question_id"]};`,
             function (err, data) {
+                console.log(data);
                 let entries = data.recordset;
                 let test = Array.from(entries);
                 for (i = 0; i < test.length; i++) {
