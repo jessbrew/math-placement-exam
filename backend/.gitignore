@@ -2,3 +2,5 @@
 coverage
 logger.log
 node_modules
+.prettierignore
+.prettierrc
