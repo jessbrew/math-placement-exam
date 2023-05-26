@@ -18,6 +18,18 @@ export default {
   name: "ReviewQuestionBlock",
   props: {
     questionId: null,
+    isApproved: null,
+    existingComments: null,
+  },
+  mounted() {
+    if (this.isApproved === true) {
+      this.approval = "1";
+    } else if (this.isApproved === false) {
+      this.approval = "0";
+    }
+    if (this.existingComments && this.existingComments != "null") {
+          this.comments = this.existingComments;
+    }
   },
   components: {
   },

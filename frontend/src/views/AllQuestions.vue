@@ -3,7 +3,7 @@
         <h1 class="question-title">All Questions</h1>
         <div v-for="question in questions" :key="question.question_id">
             <full-question-block :question="question"></full-question-block>
-            <review-question-block :questionId="question.question_id"></review-question-block>
+            <review-question-block :questionId="question.question_id" :isApproved="question.status" :existingComments="question.description"></review-question-block>
         </div>
     </span>
 </template>
