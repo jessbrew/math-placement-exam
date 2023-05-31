@@ -28,7 +28,7 @@ export default {
   .full-question-block {
     margin: 25px;
     margin-bottom: 200px;
-    min-width: 30%;
+    width: 30%;
     display: inline-block;
   }
 </style>
