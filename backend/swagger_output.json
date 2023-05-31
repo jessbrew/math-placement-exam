@@ -19,14 +19,7 @@
   ],
   "paths": {
     "/answers": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/answers/topten": {
-      "get": {
+      "post": {
         "description": "",
         "parameters": [],
         "responses": {
@@ -36,8 +29,30 @@
         }
       }
     },
-    "/answers/all": {
-      "get": {
+    "/answers/topten": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/datacheck/all": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/datacheck/update": {
+      "post": {
         "description": "",
         "parameters": [],
         "responses": {
@@ -48,7 +63,7 @@
       }
     },
     "/health": {
-      "get": {
+      "post": {
         "description": "",
         "parameters": [],
         "responses": {
@@ -58,8 +73,8 @@
         }
       }
     },
-    "/pastcourse/all": {
-      "get": {
+    "/pastcourses/all": {
+      "post": {
         "description": "",
         "parameters": [],
         "responses": {
@@ -70,7 +85,7 @@
       }
     },
     "/questiontype/all": {
-      "get": {
+      "post": {
         "description": "",
         "parameters": [],
         "responses": {
@@ -80,41 +95,8 @@
         }
       }
     },
-    "/questions/all": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/studentanswers/all": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/studentpastcourse/all": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/students/all": {
-      "get": {
+    "/questionaire": {
+      "post": {
         "description": "",
         "parameters": [],
         "responses": {
@@ -127,7 +109,29 @@
         }
       }
     },
-    "/students/test": {
+    "/questions/all": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/studentanswers/all": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/studentpastcourse/all": {
       "post": {
         "description": "",
         "parameters": [],
@@ -139,7 +143,7 @@
       }
     },
     "/students/{id}": {
-      "get": {
+      "post": {
         "description": "",
         "parameters": [
           {
@@ -174,7 +178,7 @@
       }
     },
     "/testquestions/all": {
-      "get": {
+      "post": {
         "description": "",
         "parameters": [],
         "responses": {
@@ -185,7 +189,7 @@
       }
     },
     "/tests/all": {
-      "get": {
+      "post": {
         "description": "",
         "parameters": [],
         "responses": {

@@ -4,6 +4,10 @@
 ```
 npm install
 ```
+Create a `.env` file to set the location of your API:
+```
+VUE_APP_API = "/"
+```
 
 ### Compiles and hot-reloads for development
 ```

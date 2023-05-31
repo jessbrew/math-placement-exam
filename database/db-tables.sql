@@ -85,6 +85,8 @@ CREATE TABLE [dbo].[past_courses](
 	[past_course_id] [int] IDENTITY(1,1) NOT NULL,
 	[display_order] [int] NULL,
 	[description] [varchar](300) NULL,
+	[test_type] [varchar](100) NULL,
+
 PRIMARY KEY CLUSTERED 
 (
 	[past_course_id] ASC
@@ -98,17 +100,18 @@ CREATE TABLE [dbo].[students](
 	[wlc_id] [bigint] NULL,
 	[first_name] [varchar](200) NULL,
 	[last_name] [varchar](200) NULL,
+	[advisor] [varchar](200) NULL,
 	[most_advanced_class_taken] [varchar](200) NULL,
 	[most_advanced_class_grade] [varchar](10) NULL,
 	[desired_class] [varchar](100) NULL,
 	[math_in_last_year] [bit] NULL,
+	[student_guid][varchar](200) NULL,
 	[test_id] [int] NULL,
+	[question_id] [int] NULL,
 	[inserted_on] [datetime] NULL,
 	[test_completed] [bit] NULL,
-	[question_id] [int] NULL,
-	[updated_on] [datetime] NULL,
 	[is_active] [bit] NULL,
-	[test_started_on] [datetime] NULL,
+	[start_time] [datetime] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[student_id] ASC
@@ -158,6 +161,7 @@ CREATE TABLE [dbo].[student_answers](
 	[student_answer_id] [bigint] IDENTITY(1,1) NOT NULL,
 	[student_id] [bigint] NULL,
 	[answer_id] [int] NULL,
+	[time_submitted] [datetime] NULL
 PRIMARY KEY CLUSTERED 
 (
 	[student_answer_id] ASC
@@ -172,5 +176,3 @@ GO
 ALTER TABLE [dbo].[student_answers]  WITH CHECK ADD FOREIGN KEY([student_id])
 REFERENCES [dbo].[students] ([student_id])
 GO
-
-
