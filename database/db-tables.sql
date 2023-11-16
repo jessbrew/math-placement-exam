@@ -60,11 +60,11 @@ CREATE TABLE IF NOT EXISTS dbo.past_courses
 CREATE TABLE IF NOT EXISTS dbo.students
 (
     student_id bigserial NOT NULL PRIMARY KEY,
-    math_in_last_year bit NULL,
+    math_in_last_year boolean NULL,
     student_guid varchar(200) NULL,
     test_id int NULL,
     inserted_on timestamp(3) without time zone NULL,
-    test_completed bit NULL,
+    test_completed boolean NULL,
     start_time timestamp(3) without time zone NULL,
     CONSTRAINT fk_tests_test_id FOREIGN KEY(test_id) REFERENCES dbo.tests (test_id)
 );
