@@ -66,15 +66,11 @@ CREATE TABLE IF NOT EXISTS dbo.students
     inserted_on timestamp(3) without time zone NULL,
     test_completed bit NULL,
     start_time timestamp(3) without time zone NULL,
-    -- CONSTRAINT df_inserted  DEFAULT (getdate()) FOR inserted_on,
-    -- CONSTRAINT df_completed  DEFAULT ((0)) FOR test_completed,
     CONSTRAINT fk_tests_test_id FOREIGN KEY(test_id) REFERENCES dbo.tests (test_id)
 );
-			-- ALTER TABLE [dbo].[students] ADD  CONSTRAINT [df_inserted]  DEFAULT (getdate()) FOR [inserted_on]
-			-- GO
 
-			-- ALTER TABLE [dbo].[students] ADD  CONSTRAINT [df_completed]  DEFAULT ((0)) FOR [test_completed]
-			-- GO
+ALTER TABLE dbo.students ALTER COLUMN inserted_on SET DEFAULT now();
+ALTER TABLE dbo.students ALTER COLUMN test_completed SET DEFAULT '0';
 
 -----------------------------------------------------------
 -- Create Table: student_past_courses
