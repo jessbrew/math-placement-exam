@@ -1,7 +1,7 @@
 -- Create Table: tests
 CREATE TABLE IF NOT EXISTS dbo.tests
 (
-    test_id serial NOT NULL PRIMARY KEY,
+    test_id int NOT NULL PRIMARY KEY,
     test_name varchar(100) NULL,
     time_limit int NULL
 );
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS dbo.tests
 -- Create Table: question_types
 CREATE TABLE IF NOT EXISTS dbo.question_types
 (
-    question_type_id serial NOT NULL PRIMARY KEY,
+    question_type_id int NOT NULL PRIMARY KEY,
     type_title varchar(200) NULL
 );
 
@@ -18,9 +18,11 @@ CREATE TABLE IF NOT EXISTS dbo.question_types
 -- Create Table: questions
 CREATE TABLE IF NOT EXISTS dbo.questions
 (
-    question_id serial NOT NULL PRIMARY KEY,
+    question_id int NOT NULL PRIMARY KEY,
     question_text varchar NULL,
-    question_type int NULL
+    question_type_id int NULL,
+    CONSTRAINT fk_questions_question_type_id FOREIGN KEY(question_type_id) REFERENCES dbo.question_types(question_type_id)
+
 );
 
 -----------------------------------------------------------
