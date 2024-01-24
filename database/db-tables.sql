@@ -1,5 +1,5 @@
 -- Create Table: tests
-CREATE TABLE IF NOT EXISTS dbo.tests
+CREATE TABLE IF NOT EXISTS tests
 (
     test_id int NOT NULL PRIMARY KEY,
     test_name varchar(100) NULL,
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS dbo.tests
 
 -----------------------------------------------------------
 -- Create Table: question_types
-CREATE TABLE IF NOT EXISTS dbo.question_types
+CREATE TABLE IF NOT EXISTS question_types
 (
     question_type_id int NOT NULL PRIMARY KEY,
     type_title varchar(200) NULL
@@ -16,40 +16,40 @@ CREATE TABLE IF NOT EXISTS dbo.question_types
 
 -----------------------------------------------------------
 -- Create Table: questions
-CREATE TABLE IF NOT EXISTS dbo.questions
+CREATE TABLE IF NOT EXISTS questions
 (
     question_id int NOT NULL PRIMARY KEY,
     question_text varchar NULL,
     question_type_id int NULL,
-    CONSTRAINT fk_questions_question_type_id FOREIGN KEY(question_type_id) REFERENCES dbo.question_types(question_type_id)
+    CONSTRAINT fk_questions_question_type_id FOREIGN KEY(question_type_id) REFERENCES question_types(question_type_id)
 
 );
 
 -----------------------------------------------------------
 -- Create Table: test_questions
-CREATE TABLE IF NOT EXISTS dbo.test_questions
+CREATE TABLE IF NOT EXISTS test_questions
 (
     test_question_id serial NOT NULL PRIMARY KEY,
     question_id int NOT NULL,
     test_id int NOT NULL,
-    CONSTRAINT fk_test_questions_question_id FOREIGN KEY(question_id) REFERENCES dbo.questions(question_id),
-    CONSTRAINT fk_test_questions_test_id FOREIGN KEY(test_id) REFERENCES dbo.tests(test_id)
+    CONSTRAINT fk_test_questions_question_id FOREIGN KEY(question_id) REFERENCES questions(question_id),
+    CONSTRAINT fk_test_questions_test_id FOREIGN KEY(test_id) REFERENCES tests(test_id)
 );
 
 -----------------------------------------------------------
 -- Create Table: answers
-CREATE TABLE IF NOT EXISTS dbo.answers
+CREATE TABLE IF NOT EXISTS answers
 (
     answer_id serial NOT NULL PRIMARY KEY,
     question_id int NOT NULL,
     answer_text varchar NULL,
     is_correct boolean NULL,
-    CONSTRAINT fk_answers_question_id FOREIGN KEY(question_id) REFERENCES dbo.questions(question_id)
+    CONSTRAINT fk_answers_question_id FOREIGN KEY(question_id) REFERENCES questions(question_id)
 );
 
 -----------------------------------------------------------
 -- Create Table: past_courses
-CREATE TABLE IF NOT EXISTS dbo.past_courses
+CREATE TABLE IF NOT EXISTS past_courses
 (
     past_course_id serial NOT NULL PRIMARY KEY,
     display_order int NULL,
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS dbo.past_courses
 
 -----------------------------------------------------------
 -- Create Table: students
-CREATE TABLE IF NOT EXISTS dbo.students
+CREATE TABLE IF NOT EXISTS students
 (
     student_id bigserial NOT NULL PRIMARY KEY,
     math_in_last_year boolean NULL,
@@ -68,32 +68,32 @@ CREATE TABLE IF NOT EXISTS dbo.students
     inserted_on timestamp(3) without time zone NULL,
     test_completed boolean NULL,
     start_time timestamp(3) without time zone NULL,
-    CONSTRAINT fk_tests_test_id FOREIGN KEY(test_id) REFERENCES dbo.tests (test_id)
+    CONSTRAINT fk_tests_test_id FOREIGN KEY(test_id) REFERENCES tests (test_id)
 );
 
-ALTER TABLE dbo.students ALTER COLUMN inserted_on SET DEFAULT now();
-ALTER TABLE dbo.students ALTER COLUMN test_completed SET DEFAULT '0';
+ALTER TABLE students ALTER COLUMN inserted_on SET DEFAULT now();
+ALTER TABLE students ALTER COLUMN test_completed SET DEFAULT '0';
 
 -----------------------------------------------------------
 -- Create Table: student_past_courses
-CREATE TABLE IF NOT EXISTS dbo.student_past_courses
+CREATE TABLE IF NOT EXISTS student_past_courses
 (
     student_past_course_id serial NOT NULL PRIMARY KEY,
     student_id bigint NULL,
     course_grade varchar(10),
     past_course_id int NULL,
-    CONSTRAINT fk_past_courses_past_course_id FOREIGN KEY(past_course_id) REFERENCES dbo.past_courses (past_course_id),
-    CONSTRAINT fk_student_student_id FOREIGN KEY(student_id) REFERENCES dbo.students (student_id)
+    CONSTRAINT fk_past_courses_past_course_id FOREIGN KEY(past_course_id) REFERENCES past_courses (past_course_id),
+    CONSTRAINT fk_student_student_id FOREIGN KEY(student_id) REFERENCES students (student_id)
 );
 
 -----------------------------------------------------------
 -- Create Table: student_answers
-CREATE TABLE IF NOT EXISTS dbo.student_answers
+CREATE TABLE IF NOT EXISTS student_answers
 (
     student_answer_id bigserial NOT NULL PRIMARY KEY,
     student_id bigint NULL,
     answer_id int NULL,
     time_submitted timestamp(3) without time zone NULL,
-    CONSTRAINT fk_answers_answer_id FOREIGN KEY(answer_id) REFERENCES dbo.answers (answer_id),
-    CONSTRAINT fk_students_student_id FOREIGN KEY(student_id) REFERENCES dbo.students (student_id)
+    CONSTRAINT fk_answers_answer_id FOREIGN KEY(answer_id) REFERENCES answers (answer_id),
+    CONSTRAINT fk_students_student_id FOREIGN KEY(student_id) REFERENCES students (student_id)
 );
