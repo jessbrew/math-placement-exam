@@ -1,5 +1,5 @@
 const express = require("express");
-const sql = require("mssql");
+const sql = require("pg");
 const dbConn = require("../dbconnection.js");
 const logger = require("../logger.js");
 const router = express.Router();
