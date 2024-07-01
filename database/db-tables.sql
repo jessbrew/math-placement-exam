@@ -63,7 +63,8 @@ CREATE TABLE IF NOT EXISTS students
 (
     student_id bigserial NOT NULL PRIMARY KEY,
     math_in_last_year boolean NULL,
-    student_guid varchar(200) NULL,
+    email varchar(200) NULL,
+    user_code int NULL,
     test_id int NULL,
     inserted_on timestamp(3) without time zone NULL,
     test_completed boolean NULL,
