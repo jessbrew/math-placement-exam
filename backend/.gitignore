@@ -5,4 +5,3 @@ node_modules
 .prettierignore
 .prettierrc
 swagger_output.json
-package-lock.json
