@@ -2,18 +2,18 @@
 ## Local Setup 
 In order to run this server you need a couple of things 
 - [NodeJS](nodejs.org) installed on your local machine
-- An instance of PostgreSQL (See the ReadMe in the SQL folder for instructions to setup a database for this project)
+- An instance of PostgreSQL (See the ReadMe in the database folder for instructions to setup a database for this project)
 - Admin access on your machine
 
 ### Running the project
 - In the backend root directory, run ```npm install```, this will install of the NodeJS dependencies required for the project.
 - You will have to create a ```.env``` file for database connections. This will be in the base directory of the backend folder. 
     ```
-    DB_PORT = [Your db port number]
-    DB_HOST = localhost
-    DB_USER = sa
-    DB_PASS = [Your password]
-    DB_Database = [Your db]
+    PGPORT = [Your db port number]
+    PGHOST = localhost
+    PGUSER = [Your user]
+    PGPASSWORD = [Your password]
+    PGDATABASE = [Your db]
     ```
 - If you want to generate the swagger page run ```npm run swagger-autogen```. 
    - This will create the ```swagger_output.json``` contents.
