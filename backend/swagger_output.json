@@ -18,87 +18,9 @@
     "application/json"
   ],
   "paths": {
-    "/answers": {
+    "/submit_answer": {
       "post": {
         "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/answers/topten": {
-      "post": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/datacheck/all": {
-      "post": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/datacheck/update": {
-      "post": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/health": {
-      "post": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/pastcourses/all": {
-      "post": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/questiontype/all": {
-      "post": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/questionaire": {
-      "post": {
-        "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -109,10 +31,9 @@
         }
       }
     },
-    "/questions/all": {
+    "/datacheck/all": {
       "post": {
         "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -120,10 +41,9 @@
         }
       }
     },
-    "/studentanswers/all": {
+    "/health": {
       "post": {
         "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -131,28 +51,9 @@
         }
       }
     },
-    "/studentpastcourse/all": {
+    "/questionaire": {
       "post": {
         "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/students/{id}": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -166,7 +67,6 @@
     "/students/login": {
       "post": {
         "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -177,24 +77,15 @@
         }
       }
     },
-    "/testquestions/all": {
+    "/submit_test": {
       "post": {
         "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/tests/all": {
-      "post": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
