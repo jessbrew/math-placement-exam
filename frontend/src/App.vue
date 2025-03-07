@@ -2,10 +2,12 @@
 import {ref, computed} from 'vue';
 import Home from './components/Home.vue';
 import Admin from './components/Admin.vue';
+import StudentInfo from './components/StudentInfo.vue';
 
 const routes = {
   '/': Home,
-  '/admin': Admin
+  '/admin': Admin,
+  '/studentinfo': StudentInfo
 }
 
 const currentPath = ref(window.location.hash)
@@ -22,7 +24,7 @@ const currentView = computed(() => {
 
 <template>
 <v-app>
-    <v-app-bar color="rgb(188,190,192)" prominent app dark max-height="90">
+    <v-app-bar color="#BCBEC0" prominent app dark max-height="90">
         <img src="./assets/MathematicsPlacementExam.png" class="wlcLogo">
     </v-app-bar>
     <v-main class="mainContent">
