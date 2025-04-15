@@ -1,11 +1,18 @@
 const pool = require("pg-pool");
+const fs = require('fs')
 
 const dbConfig = {
-  user: process.env.PGUSER,
-  password: process.env.PGPASSWORD,
-  host: process.env.PGHOST,
-  port: process.env.PGPORT,
-  database: process.env.PGDATABASE,
+    user: process.env.PGUSER,
+    password: process.env.PGPASSWORD,
+    host: process.env.PGHOST,
+    port: process.env.PGPORT,
+    database: process.env.PGDATABASE,
+    ssl: {
+      rejectUnauthorized: true,
+      ca: fs.readFileSync(
+          `${process.cwd()}/ca-cert.crt`.toString()
+      ),
+  },
 };
 
 
