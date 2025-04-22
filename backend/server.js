@@ -18,6 +18,10 @@ app.use("/", (questionaire = require("./routes/questionaire")));
 app.use("/", (testConn = require("./routes/testConnection")));
 app.use("/", (pastCourses = require("./routes/pastCourses")));
 app.use("/", (submit = require("./routes/surveySubmit")));
+app.use("/", (start = require("./routes/startTest")));
+app.use("/", (submitAnswer = require("./routes/submitAnswer")));
+app.use("/", (complete = require("./routes/testComplete")));
+
 
 
 
