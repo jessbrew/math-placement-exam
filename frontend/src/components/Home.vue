@@ -1,4 +1,30 @@
 <script setup>
+const verifyConnection = async() => {
+    try {
+        //const result = await fetch('http://localhost:3000/testConnection', 
+        const result = await fetch(`${import.meta.env.VITE_API_URL}testConnection`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!result.ok) {
+            throw new Error ('Internal API error.');
+        }
+        result.value = await result.json();
+        if (result.value.status === 'ok') {
+            // able to connect to the database so continue
+            window.location.hash = '#/studentinfo'
+        }
+        else {
+            alert('An error has occurred. Please contact us if this error persists.');
+        }
+    } catch (error) {
+        alert('An error has occurred. Please contact us if this error persists.');
+        console.log(error);
+    }
+}
 </script>
 
 <template>
@@ -32,7 +58,7 @@
                 <li>When you are ready, click "Begin Test" to go to the log-in screen.</li>
             </ul> 
         </v-text>
-        <v-btn class="ma-5" color="#BCBEC0" activeColor="#848586" href="/#/studentinfo">Begin Test</v-btn>
+        <v-btn class="ma-5" color="#BCBEC0" activeColor="#848586" @click="verifyConnection">Begin Test</v-btn>
     </v-card>
     
 </template>
