@@ -1,4 +1,30 @@
 <script setup>
+const verifyConnection = async() => {
+    try {
+        //const result = await fetch('http://localhost:3000/testConnection', 
+        const result = await fetch(`${import.meta.env.VITE_API_URL}testConnection`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!result.ok) {
+            throw new Error ('Internal API error.');
+        }
+        result.value = await result.json();
+        if (result.value.status === 'ok') {
+            // able to connect to the database so continue
+            window.location.hash = '#/studentinfo'
+        }
+        else {
+            alert('An error has occurred. Please contact us if this error persists.');
+        }
+    } catch (error) {
+        alert('An error has occurred. Please contact us if this error persists.');
+        console.log(error);
+    }
+}
 </script>
 
 <template>
@@ -8,41 +34,20 @@
         <v-text>
             <ul>
                 <li>
-                    <span class="important"
-                    >IMPORTANT: Please read all instructions before starting the
-                    test!</span
-                    >
+                    <span class="important">
+                        IMPORTANT: Please read all these instructions before starting the test!
+                    </span>
                 </li>
                 <li>
-                    <span class="important"
-                    >You may use one piece of scrap paper to work out answers.</span
-                    >
-                </li>
-                <li>
-                    <span class="important"
-                    >NO calculators, NO books, NO notes are allowed while taking the
-                    test.</span
-                    >
+                    <span class="important">
+                        NO calculators, NO books, NO notes, and NO internet searching are allowed while taking the test.
+                    </span>
                 </li>
                 <li>Once you start the test, you must finish it in one sitting.</li>
-                <li>
-                    You will be presented one question at a time. Once you've answered it,
-                    you cannot change your answer or go back.
-                </li>
-                <li>
-                    When you have 10 minutes left for the test you will receive a reminder.
-                </li>
-                <li>If you run out of time, the test will end.</li>
-                <li>
-                    You can only log in once. If you lose your connection, you will have to take the entire exam again.
-                </li>
-                <li>
-                    If you have any computer problems or questions, please call the WLC
-                    Technology Help Desk at (414) 443-8911 for assistance.
-                </li>
-                <li>
-                    When you are ready, click "Begin Test" to go to the log-in screen.
-                </li>
+                <li>You’ll be given one question at a time. You cannot go back to a question or change your answer.</li>
+                <li>You will receive a reminder when you have 10 minutes remaining.</li>
+                <li>The test will automatically end when your time is up.</li>
+                <li>You can only log in once. If you lose your connection, you will have to take the entire exam again.</li>
                 <li>
                     You will need your WLC ID number to login. Contact the registrar's
                     office (email:
@@ -50,9 +55,10 @@
                     or phone: <a href="tel:+14144438785"> (414) 443-8785)</a> if you need
                     your number.
                 </li>
+                <li>When you are ready, click "Begin Test" to go to the log-in screen.</li>
             </ul> 
         </v-text>
-        <v-btn class="ma-5" color="#BCBEC0" activeColor="#848586" href="/#/studentinfo">Begin Test</v-btn>
+        <v-btn class="ma-5" color="#BCBEC0" activeColor="#848586" @click="verifyConnection">Begin Test</v-btn>
     </v-card>
     
 </template>

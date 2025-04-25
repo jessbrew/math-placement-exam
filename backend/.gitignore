@@ -6,3 +6,5 @@ node_modules
 .prettierrc
 swagger_output.json
 ca-cert.crt
+.env.prod
+.env.dev
