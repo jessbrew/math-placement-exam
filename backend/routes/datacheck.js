@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 router.post("/datacheck/all", async (req, res) => {
-    // console.log('hello 1');
+    console.log('hello 1');
 
     dbConn.connect().then( async client => {
         const polled = await client.query('SELECT * FROM questions')
