@@ -1,7 +1,6 @@
 <script setup>
 const verifyConnection = async() => {
     try {
-        //const result = await fetch('http://localhost:3000/testConnection', 
         const result = await fetch(`${import.meta.env.VITE_API_URL}testConnection`,
         {
             method: 'POST',
