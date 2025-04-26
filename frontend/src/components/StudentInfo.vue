@@ -62,7 +62,7 @@ const submit = async(event) => {
   if (!isValid.valid) {
     return;
   }
-  console.log("submitting");
+  window.location.hash = '#/begintest';
 }
 </script>
 
