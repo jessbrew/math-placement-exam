@@ -8,9 +8,7 @@ var app = express(),
     bodyParser = require("body-parser");
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-app.use(cors({
-    origin: 'https://www.mathplacementexams.com'
-}));
+app.use(cors());
 app.use(bodyParser.json());
 dotenv.config();
 
