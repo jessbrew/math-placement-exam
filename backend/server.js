@@ -1,11 +1,16 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cors = require('cors');
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger_output.json");
+
 var app = express(),
     bodyParser = require("body-parser");
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
+app.use(cors({
+    origin: 'https://www.mathplacementexams.com'
+}));
 app.use(bodyParser.json());
 dotenv.config();
 
