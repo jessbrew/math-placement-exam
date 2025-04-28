@@ -32,45 +32,90 @@ router.post("/surveySubmit", async (req, res) => {
         } else if (req.body["advisor"] === undefined || req.body["advisor"] === null) {
             res.status(400).send({ error: "Missing advisor parameter" });
         }
-        else {
-            dbConn.connect().then(async function () {
+        dbConn.connect().then(async function () {
+            try {
+                const client = await dbConn.connect(); // Use the pg client
+                logger.info("connected to db at /submit");
 
-                try {
+                const TSAPreCheckQuery = `
+                    SELECT *
+                    FROM students
+                    WHERE user_code = $1 AND email = $2 AND f_name = $3 AND l_name = $4;`;
 
-                    const client = await dbConn.connect(); // Use the pg client
-                    logger.info("connected to db at /submit");
-                    const pastCourses = req.body["past_courses"];
-                    const highestPastCourseId = Math.max(...pastCourses.map(course => course.past_course_id));
+                const testCompletedQuery = `
+                    SELECT test_completed
+                    FROM students
+                    WHERE user_code = $1 AND email = $2 AND f_name = $3 AND l_name = $4;`;
 
-                    const insertQuery = `
+                const TSAPreCheckValues = [
+                    req.body["user_code"],
+                    req.body["email"],
+                    req.body["f_name"],
+                    req.body["l_name"]
+                ];
+                const TSAPreCheckResult = await client.query(TSAPreCheckQuery, TSAPreCheckValues);
+                const testCompletedResult = await client.query(testCompletedQuery, TSAPreCheckValues);
+
+                if (TSAPreCheckResult.rows.length > 0 && testCompletedResult.rows[0].test_completed) {
+                    res.status(200).send({ status: "Complete" });
+                    return;
+                } else if (TSAPreCheckResult.rows.length > 0 && !testCompletedResult.rows[0].test_completed) {
+                    const studentIDQuery = `
+                        SELECT student_id
+                        FROM students
+                        WHERE user_code = $1 AND email = $2 AND f_name = $3 AND l_name = $4;`;
+
+                    const burnbookQuery1 = `
+                        DELETE FROM student_past_courses
+                        WHERE student_id = $1;`;
+
+                    const burnbookQuery2 = `
+                        DELETE FROM student_answers
+                        WHERE student_id = $1;`;
+
+                    const burnbookQuery3 = `
+                        DELETE FROM students
+                        WHERE student_id = $1;`;
+
+                    const studentIDResult = await client.query(studentIDQuery, TSAPreCheckValues);
+                    const studentId = studentIDResult.rows[0].student_id;
+
+                    // Delete dependent records first to avoid foreign key constraint violations
+                    await client.query(burnbookQuery1, [studentId]);
+                    await client.query(burnbookQuery2, [studentId]);
+                    await client.query(burnbookQuery3, [studentId]); // Delete the student record last
+                    logger.info(`Deleted student with ID: ${studentId}`);
+                }
+                const pastCourses = req.body["past_courses"];
+                const test_id = Math.max(...pastCourses.map(course => course.past_course_id));
+
+                const insertQuery = `
                     INSERT INTO students (user_code, f_name, l_name, email, desired_class, advisor, test_id)
                     VALUES ($1, $2, $3, $4, $5, $6, $7)
                     RETURNING student_id;`;
 
-                    const values = [
-                        req.body["user_code"],
-                        req.body["f_name"],
-                        req.body["l_name"],
-                        req.body["email"],
-                        req.body["desired_class"],
-                        req.body["advisor"],
-                        highestPastCourseId // Insert the highest past_course_id as test_id
-                    ];
+                const values = [
+                    req.body["user_code"],
+                    req.body["f_name"],
+                    req.body["l_name"],
+                    req.body["email"],
+                    req.body["desired_class"],
+                    req.body["advisor"],
+                    test_id // Insert the highest past_course_id as test_id
+                ];
 
-                    const result = await client.query(insertQuery, values);
-                    const studentId = result.rows[0].student_id;
+                const result = await client.query(insertQuery, values);
+                const studentId = result.rows[0].student_id;
 
-                    res.status(200).json({ status: "ok", student_id: studentId, highestPastCourseId });
-                    logger.info(`Student added with ID: ${studentId}`);
+                res.status(200).json({ status: "ok", student_id: studentId, test_id });
+                // logger.info(`Student added with ID: ${studentId}`);
+            }
+            catch (err) {
+                logger.error(`Error: ${err}`);
+                res.status(500).send({ error: "Internal Server Error" });
+            }
 
-                }
-                catch (err) {
-                    logger.error(`Error: ${err}`);
-                    res.status(500).send({ error: "Internal Server Error" });
-                }
-
-            });
-        }
+        });
     }
     catch (err) {
         logger.error(`Error: ${err}`);

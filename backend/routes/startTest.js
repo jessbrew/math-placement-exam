@@ -5,7 +5,7 @@ const logger = require("../logger.js");
 const router = express.Router();
 router.post("/startTest", async (req, res) => {
     // Request
-    // { "student_id": 2, "test_id": 1, }
+    // { "student_id": 2, "test_id": 1 }
     try {
         if (req.body["student_id"] === undefined || req.body["student_id"] === null) {
             res.status(400).send({ error: "Missing student_id parameter" });
@@ -20,6 +20,7 @@ router.post("/startTest", async (req, res) => {
                         SET start_time = NOW()
                         WHERE student_id = $1;
                     `;
+                    logger.info(`Updating start time for student_id: ${req.body["student_id"]}`);
                     await client.query(updateQuery, [req.body["student_id"]]);
 
                     const testQuery = `
@@ -36,6 +37,7 @@ router.post("/startTest", async (req, res) => {
                     `;
                     const values = [req.body["test_id"]];
                     const result = await client.query(testQuery, values);
+                    logger.info(`Fetched questions and answers for test_id: ${req.body["test_id"]}`);
 
                     // Process the result to format it as required
                     const questions = {};
@@ -52,10 +54,24 @@ router.post("/startTest", async (req, res) => {
                             answer_text: row.answer_text
                         });
                     });
+                    logger.info(`Formatted questions for test_id: ${req.body["test_id"]}`);
+
+                    const timeLimitQuery = `
+                        SELECT time_limit
+                        FROM tests
+                        WHERE test_id = $1;
+                    `;
+                    const timeLimitResult = await client.query(timeLimitQuery, [req.body["test_id"]]);
+                    logger.info(`Fetched time limit for test_id: ${req.body["test_id"]}`);
 
                     // Convert the questions object to an array and send the response
                     const formattedQuestions = Object.values(questions);
-                    res.status(200).send(formattedQuestions);
+                    // res.status(200).send(formattedQuestions);
+                    res.status(200).send({
+                        test_id: req.body["test_id"],
+                        time_limit: timeLimitResult.rows[0],
+                        questions: formattedQuestions,
+                    });
                 } catch (err) {
                     logger.error(`Database query error: ${err.message}`);
                     res.status(500).send({ error: "Internal Server Error" });
