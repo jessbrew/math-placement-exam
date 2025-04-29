@@ -4,15 +4,16 @@ const logger = require("../logger.js");
 const router = express.Router();
 
 
-router.post("/datacheck/all", async (req, res) => {
-    console.log('hello 1');
+// router.post("/datacheck/all", async (req, res) => {
+//     // console.log('hello 1');
 
-    dbConn.connect().then( async client => {
-        const polled = await client.query('SELECT * FROM questions')
-        res.status(200).send(polled)
-    });
 
-    let result = [];
+//     dbConn.connect().then( async client => {
+//         const polled = await client.query('SELECT * FROM questions')
+//         res.status(200).send(polled)
+//     });
+
+//     let result = [];
 //     dbConn.connect().then(client => {
 //         console.log('hello 2');
 //         // client.release()
@@ -148,6 +149,6 @@ router.post("/datacheck/all", async (req, res) => {
 //             }
 //         );
 //     });
-});
+// });
 
-module.exports = router;
+// module.exports = router;

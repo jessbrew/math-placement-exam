@@ -18,8 +18,7 @@ router.post("/pastCourses", async (req, res) => {
             throw new TypeError("Content is undefined");
         }
         res.send(result.rows);
-
-    } catch(error) {
+    } catch (error) {
         logger.error(`Error: ${error}`);
         res.status(500).send({ error: "Internal Server Error" });
     } finally {
