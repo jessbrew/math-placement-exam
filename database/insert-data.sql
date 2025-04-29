@@ -653,7 +653,7 @@ VALUES
 -- Insert past_courses (UPDATED Jan 2024)
 INSERT INTO past_courses (display_order, description, test_type)
 VALUES 
+(4, 'None','Algebra'),
 (1, 'A course involving trigonometry: sine, cosine, tangent, etc.', 'Trigonometry'),
 (2, 'A first course in calculus: Calculus AB in high school or first college calculus course (NOT PRECALCULUS)','level3'),
-(3, 'A second course in calculus: Calculus BC in high school or second college calculus course','level4'),
-(4, 'None','Algebra');
+(3, 'A second course in calculus: Calculus BC in high school or second college calculus course','level4');

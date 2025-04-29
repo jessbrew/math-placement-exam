@@ -3,11 +3,13 @@ import {ref, computed} from 'vue';
 import Home from './components/Home.vue';
 import Admin from './components/Admin.vue';
 import StudentInfo from './components/StudentInfo.vue';
+import BeginTest from './components/BeginTest.vue';
 
 const routes = {
   '/': Home,
   '/admin': Admin,
-  '/studentinfo': StudentInfo
+  '/studentinfo': StudentInfo,
+  '/begintest' : BeginTest
 }
 
 const currentPath = ref(window.location.hash)
