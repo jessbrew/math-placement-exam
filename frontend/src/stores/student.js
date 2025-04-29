@@ -6,6 +6,7 @@ export const useStudentStore = defineStore('student', () => {
     const student_id = ref(0);
     const test_id = ref(0);
     const name = ref('');
+    const time_limit = ref(0);
   
-    return {student_id, test_id, name};
+    return {student_id, test_id, name, time_limit};
 });

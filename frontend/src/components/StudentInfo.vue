@@ -100,6 +100,7 @@ const submitStudentSurvey = async() => {
         store.student_id = data.student_id;
         store.test_id = data.test_id;
         store.name = `${first_name.value} ${last_name.value}`;
+        store.time_limit = data.time_limit;
 
         return true;
       }
@@ -120,100 +121,144 @@ const submitStudentSurvey = async() => {
 
 <template>
   <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
-    <v-container>
-      <h1>Student Information</h1>
-      <v-row>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-model="first_name"
-            :rules="nameRules"
-            label="First name"
-            required
-          ></v-text-field>
-        </v-col>
+    <v-container class="mt-container" fluid>
+      <v-row justify="center">
+        <v-col cols="12" md="10" lg="8">
+          <v-card class="student-card d-flex" elevation="2" rounded="xl">
+            <!-- Green Accent Bar -->
+            <div class="accent-bar"></div>
 
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-model="last_name"
-            :rules="nameRules"
-            label="Last name"
-            required
-          ></v-text-field>
-        </v-col>
+            <!-- Main Content -->
+            <div class="form-body px-6 py-6 flex-grow-1">
+              <h2 class="text-h5 font-weight-bold mb-6">Student Information</h2>
 
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-model="user_code"
-            :rules="codeRules"
-            label="WLC ID"
-            required
-          ></v-text-field>
-        </v-col>
-      </v-row>
+              <v-row>
+                <v-col cols="12" md="4">
+                  <v-text-field
+                    v-model="first_name"
+                    :rules="nameRules"
+                    label="First name"
+                    required
+                  ></v-text-field>
+                </v-col>
 
-      <v-row>
-        <v-col cols="12" md="6">
-          <v-text-field 
-            v-model="email"
-            :rules="emailRules"
-            label="WLC email"
-            required
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="desired_class"
-            :rules="classRules"
-            label="Desired course to enroll in"
-            required 
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <h3>Past courses: (select all that apply)</h3>
-        </v-col>
-      </v-row>
+                <v-col cols="12" md="4">
+                  <v-text-field
+                    v-model="last_name"
+                    :rules="nameRules"
+                    label="Last name"
+                    required
+                  ></v-text-field>
+                </v-col>
 
-      <v-row>
-        <v-col cols="12" class="pa-0">
-          <v-input
-            v-model="past_courses"
-            :rules="pastCourseRules"
-            hide-details="auto"
-            class="pa-0 ma-0"
-            density="compact"
-          >
-            <template #default>
-              <v-row dense style="padding-left: 20px;">
-                <v-col
-                  cols="12"
-                  md="12"
-                  v-for="course in pastCourseList"
-                  :key="course.past_course_id"
-                  class="pa-0"
-                >
-                  <v-checkbox
-                    v-model="past_courses"
-                    :label="course.description"
-                    :value="course.past_course_id"
-                    density="compact"
-                    hide-details
-                  ></v-checkbox>
+                <v-col cols="12" md="4">
+                  <v-text-field
+                    v-model="user_code"
+                    :rules="codeRules"
+                    label="WLC ID"
+                    required
+                  ></v-text-field>
                 </v-col>
               </v-row>
-            </template>
-          </v-input>
-        </v-col>
-      </v-row>
-      
-      
-      <v-row>
-        <v-col class="text-right" cols="12">
-          <v-btn class="ma-5" color="#BCBEC0" activeColor="#848586" type="submit">Submit</v-btn>
-        </v-col>
-      </v-row>
 
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-text-field 
+                    v-model="email"
+                    :rules="emailRules"
+                    label="WLC email"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="desired_class"
+                    :rules="classRules"
+                    label="Desired course to enroll in"
+                    required 
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-col cols="12">
+                  <h3 class="text-subtitle-1 font-weight-bold mb-2">Past courses (select all that apply):</h3>
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-col cols="12" class="pa-0">
+                  <v-input
+                    v-model="past_courses"
+                    :rules="pastCourseRules"
+                    hide-details="auto"
+                    class="pa-0 ma-0"
+                    density="compact"
+                  >
+                    <template #default>
+                      <v-row dense style="padding-left: 20px;">
+                        <v-col
+                          cols="12"
+                          md="12"
+                          v-for="course in pastCourseList"
+                          :key="course.past_course_id"
+                          class="pa-0"
+                        >
+                          <v-checkbox
+                            v-model="past_courses"
+                            :label="course.description"
+                            :value="course.past_course_id"
+                            density="compact"
+                            hide-details
+                          ></v-checkbox>
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </v-input>
+                </v-col>
+              </v-row>
+
+              <div class="d-flex justify-center mt-6">
+                <v-btn color="#1b5e20" class="text-white" type="submit" elevation="2">
+                  Submit
+                </v-btn>
+              </div>
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
   </v-form>
 </template>
+
+<style scoped>
+.mt-container {
+  margin-top: 120px;
+}
+
+.student-card {
+  display: flex;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.accent-bar {
+  width: 8px;
+  background-color: #1b5e20;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.form-body {
+  flex: 1;
+}
+
+h2 {
+  color: #1e1e1e;
+}
+
+a {
+  color: #008B95;
+  text-decoration: none;
+}
+</style>

@@ -104,7 +104,16 @@ router.post("/surveySubmit", async (req, res) => {
                 const result = await client.query(insertQuery, values);
                 const studentId = result.rows[0].student_id;
 
-                res.status(200).json({ status: "ok", student_id: studentId, test_id });
+                // Get the amount of time the test will take
+                const testQuery =  `
+                    SELECT time_limit
+                    FROM tests
+                    WHERE test_id = $1`;
+
+                const testValues = [test_id]
+                const testResult = await client.query(testQuery, testValues);
+
+                res.status(200).json({ status: "ok", student_id: studentId, test_id, time_limit: testResult.rows[0].time_limit });
                 // logger.info(`Student added with ID: ${studentId}`);
             }
             catch (err) {
