@@ -1,12 +1,38 @@
 <script setup>
 import { useStudentStore } from '@/stores/student';
-import { onMounted } from 'vue';
+import { useTestStore } from '@/stores/test';
 
-const store = useStudentStore();
+const studentStore = useStudentStore();
+const testStore = useTestStore();
 
-function verifyConnection() {
-  // Placeholder function
-  console.log('Start button clicked');
+const startTest = async() => {
+    try {
+        const reqBody = {
+            student_id: studentStore.student_id,
+            test_id: studentStore.test_id
+        };
+        const result = await fetch(`${import.meta.env.VITE_API_URL}startTest`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify(reqBody)
+            });
+        
+        if (!result.ok) {
+            throw new Error ('Internal API error.');
+        }
+
+        let data = await result.json();
+        testStore.questions = data.questions;
+        testStore.startTimer(studentStore.time_limit);
+        window.location.hash = '#/test';
+
+    } catch (error) {
+      alert('An error has occurred. Please contact us if this error persists.');
+      console.log(error);
+    }
 }
 </script>
 
@@ -16,7 +42,7 @@ function verifyConnection() {
     <v-col cols="12">
     <v-card width="800" class="pa-6 elevation-3 mx-auto" style="border-left: 6px solid #006643;">
       <v-card-title class="text-h5 font-weight-bold" style="color: #006643;">
-        Welcome, {{ store.name }}!
+        Welcome, {{ studentStore.name }}!
       </v-card-title>
       <v-card-subtitle class="mb-4" style="color: #1E1E1E;">
         You're about to begin your Mathematics Placement Exam
@@ -29,7 +55,7 @@ function verifyConnection() {
           <v-icon class="mr-2" color="#006643">mdi-clock-outline</v-icon>
         </v-col>
         <v-col>
-          You will have <b>{{ store.time_limit / 60 }} minutes</b> to complete your exam.
+          You will have <b>{{ studentStore.time_limit / 60 }} minutes</b> to complete your exam.
         </v-col>
       </v-row>
 
@@ -46,7 +72,7 @@ function verifyConnection() {
         Are you ready?
       </div>
 
-      <v-btn color="#006643" class="mt-2" size="large" @click="verifyConnection" dark>
+      <v-btn color="#006643" class="mt-2" size="large" @click="startTest" dark>
         Start the Test
       </v-btn>
     </v-card>

@@ -1,15 +1,26 @@
 <script setup>
 import { ref, computed } from 'vue';
+import { useTestStore } from './stores/test';
 import Home from './components/Home.vue';
 import Admin from './components/Admin.vue';
 import StudentInfo from './components/StudentInfo.vue';
 import BeginTest from './components/BeginTest.vue';
+import Test from './components/Test.vue';
+import TestComplete from './components/TestComplete.vue';
+
+const testStore = useTestStore();
+
+const timerClass = computed(() => {
+  return testStore.minutes < 5 ? 'text-error font-weight-bold' : 'text-h6 font-weight-bold';
+});
 
 const routes = {
   '/': Home,
   '/admin': Admin,
   '/studentinfo': StudentInfo,
-  '/begintest': BeginTest
+  '/begintest': BeginTest,
+  '/test': Test,
+  '/testcomplete': TestComplete
 };
 
 const currentPath = ref(window.location.hash);
@@ -34,6 +45,11 @@ const currentView = computed(() => {
             alt="WLC Mathematics Placement Logo"
           />
         </v-toolbar-title>
+        <div v-if="testStore.timeRemaining > 0" class="d-flex justify-end">
+          <div :class="timerClass" class="text-h6 font-weight-bold mr-4">
+            Time: {{ testStore.minutes }} min
+          </div>
+        </div>
       </v-container>
     </v-app-bar>
 
