@@ -15,8 +15,7 @@ router.post("/surveySubmit", async (req, res) => {
     //  {"past_course_id": 1},
     //  {"past_course_id": 2}
     //  ],
-    //  "desired_class": "Calc 3",
-    //  "advisor" : "So and So" }
+    //  "desired_class": "Calc 3"}
     try {
         if (req.body["user_code"] === undefined || req.body["user_code"] === null) {
             res.status(400).send({ error: "Missing student_code parameter" });
@@ -30,8 +29,6 @@ router.post("/surveySubmit", async (req, res) => {
             res.status(400).send({ error: "Missing past_courses parameter" });
         } else if (req.body["desired_class"] === undefined || req.body["desired_class"] === null) {
             res.status(400).send({ error: "Missing desired_class parameter" });
-        } else if (req.body["advisor"] === undefined || req.body["advisor"] === null) {
-            res.status(400).send({ error: "Missing advisor parameter" });
         } else {
 
             try {
@@ -91,8 +88,8 @@ router.post("/surveySubmit", async (req, res) => {
                 const test_id = Math.max(...pastCourses.map(course => course.past_course_id));
 
                 const insertQuery = `
-                    INSERT INTO students (user_code, first_name, last_name, email, desired_class, advisor, test_id)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7)
+                    INSERT INTO students (user_code, first_name, last_name, email, desired_class, test_id)
+                    VALUES ($1, $2, $3, $4, $5, $6)
                     RETURNING student_id;`;
 
                 const values = [
@@ -101,7 +98,6 @@ router.post("/surveySubmit", async (req, res) => {
                     req.body["last_name"],
                     req.body["email"],
                     req.body["desired_class"],
-                    req.body["advisor"],
                     test_id // Insert the highest past_course_id as test_id
                 ];
 
@@ -123,7 +119,9 @@ router.post("/surveySubmit", async (req, res) => {
         logger.error(`Error: ${err}`);
         res.status(500).send({ error: "Internal Server Error" });
     } finally {
-        client.release();
+        if (client){
+            client.release();
+        }
     }
 });
 

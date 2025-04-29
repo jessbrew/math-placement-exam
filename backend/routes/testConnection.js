@@ -18,7 +18,9 @@ router.post("/testConnection", async (req, res) => {
         logger.error("Database Connection Failed", error);
         res.status(500).json({ status: "error", message: "Database Connection Failed" });
     } finally {
-        client.release();
+        if(client) {
+            client.release();
+        }
     }
 
 });
