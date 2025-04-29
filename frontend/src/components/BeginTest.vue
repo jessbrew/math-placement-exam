@@ -1,4 +1,8 @@
 <script setup>
+import { useStudentStore } from '@/stores/student';
+import { onMounted } from 'vue';
+
+const store = useStudentStore();
 
 </script>
 

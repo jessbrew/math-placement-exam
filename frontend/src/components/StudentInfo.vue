@@ -1,6 +1,9 @@
 <script setup>
 import {onMounted, ref} from 'vue';
+import { useStudentStore } from '@/stores/student';
 
+// Setup the page
+const store = useStudentStore();
 const form = ref(null); 
 const first_name = ref('');
 const last_name = ref('');
@@ -57,12 +60,61 @@ onMounted( () => {
   getPastCourses();
 });
 
+
+// Submission 
 const submit = async(event) => {
   const isValid = await form.value.validate();
   if (!isValid.valid) {
     return;
   }
-  window.location.hash = '#/begintest';
+  if(submitStudentSurvey()) {
+    window.location.hash = '#/begintest';
+  }
+}
+
+const submitStudentSurvey = async() => {
+  try{
+    const reqBody = {
+      first_name: first_name.value,
+      last_name: last_name.value,
+      user_code: user_code.value,
+      email: email.value,
+      desired_class: desired_class.value,
+      past_courses: past_courses.value.map(courseId => ({past_course_id: courseId}))
+    };
+    const result = await fetch(`${import.meta.env.VITE_API_URL}surveySubmit`,
+      {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(reqBody)
+      });
+      if (!result.ok) {
+            throw new Error ('Internal API error.');
+      }
+      let data = await result.json();
+
+      if (data.status === "ok") {
+        // Save student id and test, then move on
+        store.student_id = data.student_id;
+        store.test_id = data.test_id;
+        store.name = `${first_name.value} ${last_name.value}`;
+
+        return true;
+      }
+      else if (data.status === "completed") {
+        alert("It appears you have already completed this exam. If you feel this is in error, please contact us.")
+      }
+      else {
+        alert('An error has occurred. Please contact us if this error persists.');
+        console.log(data);
+      }
+      return false;
+  } catch(error) {
+    alert('An error has occurred. Please contact us if this error persists.');
+    console.log(error);
+  }
 }
 </script>
 
