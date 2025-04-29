@@ -50,6 +50,10 @@ export const useTestStore = defineStore('test', () => {
         return currentQuestionIndex.value === questions.value.length - 1;
     }
 
+    function getQuestionNumber() {
+        return currentQuestionIndex.value + 1;
+    }
+
     return {
         timeRemaining,
         startTimer,
@@ -58,6 +62,7 @@ export const useTestStore = defineStore('test', () => {
         questions,
         getCurrentQuestion,
         nextQuestion,
-        isLastQuestion
+        isLastQuestion,
+        getQuestionNumber
     };
 });

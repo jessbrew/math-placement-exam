@@ -62,7 +62,7 @@ const verifyConnection = async () => {
               </ul>
   
               <div class="text-center mt-4">
-                <v-btn color="#1b5e20" class="text-white" elevation="2" @click="verifyConnection" :loading="isLoading" :disabled="isLoading">
+                <v-btn color="#006643" class="text-white" elevation="2" @click="verifyConnection" :loading="isLoading" :disabled="isLoading">
                     Begin Test
                 </v-btn>
               </div>
@@ -87,7 +87,7 @@ const verifyConnection = async () => {
   
   .accent-bar {
     width: 8px;
-    background-color: #1b5e20;
+    background-color: #006643;
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
   }

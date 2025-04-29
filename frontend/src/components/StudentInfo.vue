@@ -219,7 +219,7 @@ const submitStudentSurvey = async() => {
               </v-row>
 
               <div class="d-flex justify-center mt-6">
-                <v-btn color="#1b5e20" class="text-white" type="submit" elevation="2">
+                <v-btn color="#006643" class="text-white" type="submit" elevation="2">
                   Submit
                 </v-btn>
               </div>
@@ -244,7 +244,7 @@ const submitStudentSurvey = async() => {
 
 .accent-bar {
   width: 8px;
-  background-color: #1b5e20;
+  background-color: #006643;
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
 }
