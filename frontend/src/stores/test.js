@@ -22,6 +22,7 @@ export const useTestStore = defineStore('test', () => {
     function stopTimer() {
         if (interval) clearInterval(interval);
         interval = null;
+        timeRemaining.value = 0;
     }
 
     const minutes = computed(() => Math.ceil(timeRemaining.value / 60));

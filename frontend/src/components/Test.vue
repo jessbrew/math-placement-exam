@@ -1,26 +1,109 @@
 <script setup>
 import { useTestStore } from '@/stores/test';
-import { computed, ref } from 'vue';
+import { useStudentStore } from '@/stores/student';
+import { computed, ref, watch, nextTick, onMounted } from 'vue';
 
 const testStore = useTestStore();
+const studentStore = useStudentStore();
 
 const form = ref(null);
+const answer_id = ref(null);
 
 const currentQuestion = computed(() => testStore.getCurrentQuestion());
 const currentNumber = computed(() => testStore.getQuestionNumber());
 
 const submit = async() => {
-    console.log("sub");
+    await completeTest();
 }
 
-const next = () => {
-    testStore.nextQuestion();
+const next = async() => {
+    try {
+        // submit the answer then get next question
+        const reqBody = {
+            student_id: studentStore.student_id,
+            answer_id: answer_id.value
+        }
+
+        const result = await fetch(`${import.meta.env.VITE_API_URL}submitAnswer`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reqBody)
+        });
+
+        if (!result.ok) {
+            throw new Error ('Internal API error.');
+        }
+        let data = await result.json();
+
+        if (data.status === "ok") {
+            answer_id.value = null;
+            testStore.nextQuestion();
+        }
+        else if (data.status === "time") {
+            // Time ended (also being watched by the frontend so this should rarely get hit)
+            await completeTest();
+        }
+    } catch(error) {
+        alert('An error has occurred.');
+        console.log(error);
+    }
+    
+}
+
+watch(currentQuestion, async () => {
+    await nextTick(); // Wait for DOM update
+    if (window.MathJax) {
+        window.MathJax.typesetPromise(); // Re-typeset the page
+    }
+    if (window.MathJax?.typesetPromise) {
+        await window.MathJax.typesetPromise();
+    }
+});
+
+onMounted(async () => {
+    await nextTick();
+    
+    if (window.MathJax?.typesetPromise) {
+        await window.MathJax.typesetPromise();
+    }
+});
+
+const completeTest = async () => {
+    try {
+        // submit the answer then get next question
+        const reqBody = {
+            student_id: studentStore.student_id,
+            status: "complete"
+        };
+
+        const result = await fetch(`${import.meta.env.VITE_API_URL}testComplete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reqBody)
+        });
+
+        if (!result.ok) {
+            throw new Error ('Internal API error.');
+        }
+        let data = await result.json();
+
+        if (data.status === "ok") {
+            window.location.hash = '#/testcomplete';
+        }
+    } catch(error) {
+        alert('An error has occurred.');
+        console.log(error);
+    }
 }
 </script>
 
 <template>
     <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
-        <v-container class="mt-container" fluid>
+        <v-container width="1000px" class="mt-container" fluid>
             <v-row justify="center">
                 <v-col cols="12" md="10" lg="8">
                     <v-card class="student-card d-flex" elevation="2" rounded="xl">
@@ -31,14 +114,29 @@ const next = () => {
 
                             <v-row>
                                 <v-col cols="12">
-                                    <div v-if="currentQuestion">
-                                        {{ currentQuestion.question_text }}
-                                    </div>
+                                    <div v-if="currentQuestion" v-html="currentQuestion.question_text"></div>
                                     <div v-else>
                                         There was an error loading your next question. Please contact us.
                                     </div>
                                 </v-col>
                             </v-row>
+
+                            <v-row>
+                                <v-col cols="12" class="ml-2">
+                                    <v-radio-group v-model="answer_id"
+                                    :mandatory="true"
+                                    hide-details>
+                                        <v-radio
+                                            v-for="answer in currentQuestion.answers"
+                                            :key="answer.answer_id"
+                                            :label="answer.answer_text"
+                                            :value="answer.answer_id"
+                                            class="mb-2"
+                                        ></v-radio>
+                                    </v-radio-group>
+                                </v-col>
+                            </v-row>
+
                             <div class="d-flex justify-center mt-6">
                                 <div v-if="testStore.isLastQuestion()">
                                     <v-btn color="#006643" class="text-white" @click="submit" elevation="2">
@@ -46,7 +144,7 @@ const next = () => {
                                     </v-btn>
                                 </div>
                                 <div v-else>
-                                    <v-btn color="#006643" class="text-white" @click="next" :disabled="testStore.isLastQuestion()" elevation="2">
+                                    <v-btn color="#006643" class="text-white" @click="next" :disabled="!answer_id || testStore.isLastQuestion()" elevation="2">
                                     Next Question
                                     </v-btn>
                                 </div>
