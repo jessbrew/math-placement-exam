@@ -114,10 +114,13 @@ const submitAnswer = async () => {
                                         <v-radio
                                             v-for="answer in currentQuestion.answers"
                                             :key="answer.answer_id"
-                                            :label="answer.answer_text"
                                             :value="answer.answer_id"
                                             class="mb-2"
-                                        ></v-radio>
+                                        >
+                                        <template #label>
+                                            <span v-html="answer.answer_text"></span>
+                                        </template>
+                                        </v-radio>
                                     </v-radio-group>
                                 </v-col>
                             </v-row>
