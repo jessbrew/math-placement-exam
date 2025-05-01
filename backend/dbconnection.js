@@ -7,12 +7,12 @@ const dbConfig = {
     host: process.env.PGHOST,
     port: process.env.PGPORT,
     database: process.env.PGDATABASE,
-    ssl: {
+    ssl: process.env.DB_SSL === 'true' ? {
       rejectUnauthorized: true,
       ca: fs.readFileSync(
           `${process.cwd()}/ca-cert.crt`.toString()
       ),
-  },
+    } : false
 };
 
 
