@@ -8,6 +8,7 @@ const studentStore = useStudentStore();
 
 const form = ref(null);
 const answer_id = ref(null);
+const showTimeoutDialog = ref(false);
 
 const currentQuestion = computed(() => testStore.getCurrentQuestion());
 const currentNumber = computed(() => testStore.getQuestionNumber());
@@ -16,7 +17,8 @@ const submit = async() => {
     let result = await submitAnswer();
 
     if (result === "ok" || result === "time") {
-        await testStore.testComplete();
+        await testComplete();
+        goToEnding();
     }
     else {
         alert('An error has occurred.');
@@ -32,12 +34,27 @@ const next = async() => {
     }
     else if (result === "time") {
         // Time ended (also being watched by the frontend so this should rarely get hit)
-        await testStore.testComplete();
+        await testComplete();
+        showTimeoutDialog.value = true;
     }
     else {
         alert('An error has occurred');
     }
 }
+
+const goToEnding = () => {
+    window.location.hash = '#/testcomplete';
+}
+
+watch(() => testStore.timedOut, async (newVal) => {
+  if (newVal) {
+    if (answer_id.value) {
+        await submitAnswer();
+    }
+    await testComplete();
+    showTimeoutDialog.value = true;
+  }
+});
 
 watch(currentQuestion, async () => {
     await nextTick(); // Wait for DOM update
@@ -84,9 +101,51 @@ const submitAnswer = async () => {
         console.log(error);
     }
 }
+
+async function testComplete() {
+    try {
+        const reqBody = {
+            student_id: studentStore.student_id,
+            status: "complete"
+        };
+
+        const result = await fetch(`${import.meta.env.VITE_API_URL}testComplete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reqBody)
+        });
+
+        if (!result.ok) {
+            throw new Error ('Internal API error.');
+        }
+        let data = await result.json();
+
+    } catch(error) {
+        alert('An error has occurred.');
+        console.log(error);
+    }
+}
 </script>
 
 <template>
+    <v-dialog v-model="showTimeoutDialog" persistent max-width="500">
+        <v-card style="min-height: 200px;">
+            <v-card-title class="headline text-center">
+            Time's Up
+            </v-card-title>
+            <v-card-text>
+            Your time has expired. Your answers have been automatically submitted.
+            </v-card-text>
+            <v-card-actions class="justify-center">
+            <v-btn style="background-color: #006643;" color="#006643" class="text-white" @click="goToEnding">
+                Ok
+            </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
     <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
         <v-container width="1000px" class="mt-container" fluid>
             <v-row justify="center">
