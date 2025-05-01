@@ -27,7 +27,7 @@ onMounted( () => {
           <v-icon class="mr-2" color="#006643">mdi-check</v-icon>
         </v-col>
         <v-col>
-            Your responses have been submitted successfully. The mathematics department will review your results and determine the appropriate course placement.  
+            Your responses have been submitted successfully. The Mathematics Department will review your results and determine the appropriate course placement.  
             If you have any questions or concerns, feel free to contact the registrar's office.
         </v-col>
       </v-row>

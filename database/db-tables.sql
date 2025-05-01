@@ -62,12 +62,8 @@ CREATE TABLE IF NOT EXISTS past_courses
 CREATE TABLE IF NOT EXISTS students
 (
     student_id bigserial NOT NULL PRIMARY KEY,
-    in_math_last_year boolean NULL,
-    most_advanced_class_taken varchar NULL,
-    most_advanced_class_grade varchar NULL,
     desired_class varchar NULL, 
     email varchar(200) NULL,
-    advisor varchar NULL,
     first_name varchar NULL,
     last_name varchar NULL,
     user_code int NULL,
