@@ -13,43 +13,30 @@ const currentQuestion = computed(() => testStore.getCurrentQuestion());
 const currentNumber = computed(() => testStore.getQuestionNumber());
 
 const submit = async() => {
-    await completeTest();
+    let result = await submitAnswer();
+
+    if (result === "ok" || result === "time") {
+        await testStore.testComplete();
+    }
+    else {
+        alert('An error has occurred.');
+    }
 }
 
 const next = async() => {
-    try {
-        // submit the answer then get next question
-        const reqBody = {
-            student_id: studentStore.student_id,
-            answer_id: answer_id.value
-        }
+    let result = await submitAnswer();
 
-        const result = await fetch(`${import.meta.env.VITE_API_URL}submitAnswer`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(reqBody)
-        });
-
-        if (!result.ok) {
-            throw new Error ('Internal API error.');
-        }
-        let data = await result.json();
-
-        if (data.status === "ok") {
-            answer_id.value = null;
-            testStore.nextQuestion();
-        }
-        else if (data.status === "time") {
-            // Time ended (also being watched by the frontend so this should rarely get hit)
-            await completeTest();
-        }
-    } catch(error) {
-        alert('An error has occurred.');
-        console.log(error);
+    if (result === "ok") {
+        answer_id.value = null;
+        testStore.nextQuestion();
     }
-    
+    else if (result === "time") {
+        // Time ended (also being watched by the frontend so this should rarely get hit)
+        await testStore.testComplete();
+    }
+    else {
+        alert('An error has occurred');
+    }
 }
 
 watch(currentQuestion, async () => {
@@ -70,15 +57,15 @@ onMounted(async () => {
     }
 });
 
-const completeTest = async () => {
+const submitAnswer = async () => {
     try {
         // submit the answer then get next question
         const reqBody = {
             student_id: studentStore.student_id,
-            status: "complete"
-        };
+            answer_id: answer_id.value
+        }
 
-        const result = await fetch(`${import.meta.env.VITE_API_URL}testComplete`, {
+        const result = await fetch(`${import.meta.env.VITE_API_URL}submitAnswer`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -91,9 +78,7 @@ const completeTest = async () => {
         }
         let data = await result.json();
 
-        if (data.status === "ok") {
-            window.location.hash = '#/testcomplete';
-        }
+        return data.status;
     } catch(error) {
         alert('An error has occurred.');
         console.log(error);
@@ -114,7 +99,7 @@ const completeTest = async () => {
 
                             <v-row>
                                 <v-col cols="12">
-                                    <div v-if="currentQuestion" v-html="currentQuestion.question_text"></div>
+                                    <div v-if="currentQuestion" v-html="currentQuestion.question_text" class="question-text"></div>
                                     <div v-else>
                                         There was an error loading your next question. Please contact us.
                                     </div>
@@ -158,6 +143,15 @@ const completeTest = async () => {
 </template>
 
 <style scoped>
+.v-selection-control__label {
+  font-size: 1.2rem;
+}
+
+.question-text {
+  font-size: 1.25rem; /* or 1.5rem for even bigger */
+  line-height: 1.6;
+}
+
 .mt-container {
   margin-top: 120px;
 }

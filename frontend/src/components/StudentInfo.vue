@@ -67,7 +67,8 @@ const submit = async(event) => {
   if (!isValid.valid) {
     return;
   }
-  if(submitStudentSurvey()) {
+  let startTest = await submitStudentSurvey();
+  if(startTest) {
     window.location.hash = '#/begintest';
   }
 }
@@ -104,8 +105,9 @@ const submitStudentSurvey = async() => {
 
         return true;
       }
-      else if (data.status === "completed") {
+      else if (data.status === "Complete") {
         alert("It appears you have already completed this exam. If you feel this is in error, please contact us.")
+        return false;
       }
       else {
         alert('An error has occurred. Please contact us if this error persists.');
