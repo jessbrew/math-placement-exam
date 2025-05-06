@@ -15,7 +15,7 @@ router.post("/surveySubmit", async (req, res) => {
     //  {"past_course_id": 1},
     //  {"past_course_id": 2}
     //  ],
-    //  "desired_class": "Calc 3"}
+    //  "available_course_id": 1}
     try {
         if (req.body["user_code"] === undefined || req.body["user_code"] === null) {
             res.status(400).send({ error: "Missing student_code parameter" });
@@ -27,41 +27,32 @@ router.post("/surveySubmit", async (req, res) => {
             res.status(400).send({ error: "Missing email parameter" });
         } else if (req.body["past_courses"] === undefined || req.body["past_courses"] === null) {
             res.status(400).send({ error: "Missing past_courses parameter" });
-        } else if (req.body["desired_class"] === undefined || req.body["desired_class"] === null) {
-            res.status(400).send({ error: "Missing desired_class parameter" });
+        } else if (req.body["available_course_id"] === undefined || req.body["available_course_id"] === null) {
+            res.status(400).send({ error: "Missing available_course_id parameter" });
         } else {
 
             try {
                 client = await dbConn.connect(); // Use the pg client
                 logger.info("connected to db at /submit");
 
-                const TSAPreCheckQuery = `
-                    SELECT *
-                    FROM students
-                    WHERE user_code = $1 AND email = $2 AND first_name = $3 AND last_name = $4;`;
-
                 const testCompletedQuery = `
                     SELECT test_completed
                     FROM students
-                    WHERE user_code = $1 AND email = $2 AND first_name = $3 AND last_name = $4;`;
+                    WHERE user_code = $1;`;
 
                 const TSAPreCheckValues = [
                     req.body["user_code"],
-                    req.body["email"],
-                    req.body["first_name"],
-                    req.body["last_name"]
                 ];
-                const TSAPreCheckResult = await client.query(TSAPreCheckQuery, TSAPreCheckValues);
                 const testCompletedResult = await client.query(testCompletedQuery, TSAPreCheckValues);
 
-                if (TSAPreCheckResult.rows.length > 0 && testCompletedResult.rows[0].test_completed) {
+                if (testCompletedResult.rows.length > 0 && testCompletedResult.rows[0].test_completed) {
                     res.status(200).send({ status: "Complete" });
                     return;
-                } else if (TSAPreCheckResult.rows.length > 0 && !testCompletedResult.rows[0].test_completed) {
+                } else if (testCompletedResult.rows.length > 0 && !testCompletedResult.rows[0].test_completed) {
                     const studentIDQuery = `
                         SELECT student_id
                         FROM students
-                        WHERE user_code = $1 AND email = $2 AND first_name = $3 AND last_name = $4;`;
+                        WHERE user_code = $1;`;
 
                     const burnbookQuery1 = `
                         DELETE FROM student_past_courses
@@ -84,11 +75,19 @@ router.post("/surveySubmit", async (req, res) => {
                     await client.query(burnbookQuery3, [studentId]); // Delete the student record last
                     logger.info(`Deleted student with ID: ${studentId}`);
                 }
-                const pastCourses = req.body["past_courses"];
-                const test_id = Math.max(...pastCourses.map(course => course.past_course_id));
 
+                // Find the test
+                const findTestQuery = `
+                    SELECT test_id
+                    FROM available_course
+                    WHERE available_course_id = $1
+                `;
+                const findTestResult = await client.query(findTestQuery, [req.body["available_course_id"]])
+                const test_id = findTestResult.rows[0].test_id;
+
+                // Insert the student
                 const insertQuery = `
-                    INSERT INTO students (user_code, first_name, last_name, email, desired_class, test_id)
+                    INSERT INTO students (user_code, first_name, last_name, email, available_course_id, test_id)
                     VALUES ($1, $2, $3, $4, $5, $6)
                     RETURNING student_id;`;
 
@@ -97,24 +96,33 @@ router.post("/surveySubmit", async (req, res) => {
                     req.body["first_name"],
                     req.body["last_name"],
                     req.body["email"],
-                    req.body["desired_class"],
+                    req.body["available_course_id"],
                     test_id // Insert the highest past_course_id as test_id
                 ];
 
                 const result = await client.query(insertQuery, values);
                 const studentId = result.rows[0].student_id;
 
-                // Get the amount of time the test will take
+                // Insert past courses
+                const pastCourses = req.body["past_courses"];
+                const vals = pastCourses.flatMap(course => [studentId, course.past_course_id]);
+                const placeholders = pastCourses
+                    .map((_, index) => `($${index * 2 + 1}, $${index * 2 + 2})`)
+                    .join(", ");
+                const query = `INSERT INTO student_past_courses (student_id, past_course_id) VALUES ${placeholders}`;
+                await client.query(query, vals);
+
+                // Get the amount of time and question count
                 const testQuery =  `
-                    SELECT time_limit
+                    SELECT time_limit, (SELECT COUNT(*) FROM test_questions WHERE test_id = $1) AS "question_count"
                     FROM tests
                     WHERE test_id = $1`;
 
                 const testValues = [test_id]
                 const testResult = await client.query(testQuery, testValues);
 
-                res.status(200).json({ status: "ok", student_id: studentId, test_id, time_limit: testResult.rows[0].time_limit });
-                // logger.info(`Student added with ID: ${studentId}`);
+                res.status(200).json({ status: "ok", student_id: studentId, test_id, time_limit: testResult.rows[0].time_limit, question_count: testResult.rows[0].question_count });
+                logger.info(`Student added with ID: ${studentId}`);
             }
             catch (err) {
                 logger.error(`Error: ${err}`);

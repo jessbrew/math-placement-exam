@@ -19,6 +19,7 @@ app.use("/", (submit = require("./routes/surveySubmit")));
 app.use("/", (start = require("./routes/startTest")));
 app.use("/", (submitAnswer = require("./routes/submitAnswer")));
 app.use("/", (complete = require("./routes/testComplete")));
+app.use("/", (availableCourses = require("./routes/availableCourses")));
 
 
 
