@@ -53,8 +53,18 @@ CREATE TABLE IF NOT EXISTS past_courses
 (
     past_course_id serial NOT NULL PRIMARY KEY,
     display_order int NULL,
+    description varchar(300) NULL
+);
+
+-----------------------------------------------------------
+-- Create Table: available_courses
+CREATE TABLE IF NOT EXISTS available_course
+(
+    available_course_id serial NOT NULL PRIMARY KEY,
+    display_order int NULL,
     description varchar(300) NULL,
-    test_type varchar(100) NULL
+    test_id int NULL,
+    CONSTRAINT fk_tests_test_id FOREIGN KEY(test_id) REFERENCES tests (test_id)
 );
 
 -----------------------------------------------------------
@@ -71,11 +81,13 @@ CREATE TABLE IF NOT EXISTS students
     inserted_on timestamp(3) without time zone NULL,
     test_completed boolean NULL,
     start_time timestamp(3) without time zone NULL,
+    test_evaluated boolean NULL,
     CONSTRAINT fk_tests_test_id FOREIGN KEY(test_id) REFERENCES tests (test_id)
 );
 
 ALTER TABLE students ALTER COLUMN inserted_on SET DEFAULT now();
 ALTER TABLE students ALTER COLUMN test_completed SET DEFAULT '0';
+ALTER TABLE students ALTER COLUMN test_evaluated SET DEFAULT '0';
 
 -----------------------------------------------------------
 -- Create Table: student_past_courses

@@ -47,7 +47,7 @@ const currentView = computed(() => {
         </v-toolbar-title>
         <div v-if="testStore.timeRemaining > 0" class="d-flex justify-end">
           <div :class="timerClass" class="text-h6 font-weight-bold mr-4">
-            Time: {{ testStore.minutes }} min
+            Time Remaining: {{ testStore.minutes }} min
           </div>
         </div>
       </v-container>

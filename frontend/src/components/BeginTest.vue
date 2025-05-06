@@ -52,6 +52,15 @@ const startTest = async() => {
 
       <v-row class="mb-2" no-gutters align="center">
         <v-col cols="auto">
+          <v-icon class="mr-2" color="#006643">mdi-help</v-icon>
+        </v-col>
+        <v-col>
+          This test contains <b>10 questions</b>.
+        </v-col>
+      </v-row>
+
+      <v-row class="mb-2" no-gutters align="center">
+        <v-col cols="auto">
           <v-icon class="mr-2" color="#006643">mdi-clock-outline</v-icon>
         </v-col>
         <v-col>

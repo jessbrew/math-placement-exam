@@ -154,7 +154,7 @@ async function testComplete() {
                         <!-- Green Accent Bar -->
                         <div class="accent-bar"></div>
                         <div class="form-body px-6 py-6 flex-grow-1">
-                            <h2 class="text-h5 font-weight-bold mb-6">Question {{ currentNumber }}</h2>
+                            <h2 class="text-h5 font-weight-bold mb-6">Question {{ currentNumber }} of {{ testStore.questions.length }}</h2>
 
                             <v-row>
                                 <v-col cols="12">
