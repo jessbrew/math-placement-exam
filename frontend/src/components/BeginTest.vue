@@ -55,7 +55,7 @@ const startTest = async() => {
           <v-icon class="mr-2" color="#006643">mdi-help</v-icon>
         </v-col>
         <v-col>
-          This test contains <b>10 questions</b>.
+          This test contains <b>{{ studentStore.question_count }} questions</b>.
         </v-col>
       </v-row>
 
