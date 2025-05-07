@@ -53,8 +53,18 @@ CREATE TABLE IF NOT EXISTS past_courses
 (
     past_course_id serial NOT NULL PRIMARY KEY,
     display_order int NULL,
+    description varchar(300) NULL
+);
+
+-----------------------------------------------------------
+-- Create Table: available_courses
+CREATE TABLE IF NOT EXISTS available_course
+(
+    available_course_id serial NOT NULL PRIMARY KEY,
+    display_order int NULL,
     description varchar(300) NULL,
-    test_type varchar(100) NULL
+    test_id int NULL,
+    CONSTRAINT fk_tests_test_id FOREIGN KEY(test_id) REFERENCES tests (test_id)
 );
 
 -----------------------------------------------------------
@@ -62,7 +72,7 @@ CREATE TABLE IF NOT EXISTS past_courses
 CREATE TABLE IF NOT EXISTS students
 (
     student_id bigserial NOT NULL PRIMARY KEY,
-    desired_class varchar NULL, 
+    available_course_id int NULL, 
     email varchar(200) NULL,
     first_name varchar NULL,
     last_name varchar NULL,
@@ -71,11 +81,14 @@ CREATE TABLE IF NOT EXISTS students
     inserted_on timestamp(3) without time zone NULL,
     test_completed boolean NULL,
     start_time timestamp(3) without time zone NULL,
-    CONSTRAINT fk_tests_test_id FOREIGN KEY(test_id) REFERENCES tests (test_id)
+    test_evaluated boolean NULL,
+    CONSTRAINT fk_tests_test_id FOREIGN KEY(test_id) REFERENCES tests (test_id),
+    CONSTRAINT fk_tests_available_course_id FOREIGN KEY (available_course_id) REFERENCES available_course (available_course_id)
 );
 
 ALTER TABLE students ALTER COLUMN inserted_on SET DEFAULT now();
 ALTER TABLE students ALTER COLUMN test_completed SET DEFAULT '0';
+ALTER TABLE students ALTER COLUMN test_evaluated SET DEFAULT '0';
 
 -----------------------------------------------------------
 -- Create Table: student_past_courses
@@ -83,7 +96,6 @@ CREATE TABLE IF NOT EXISTS student_past_courses
 (
     student_past_course_id serial NOT NULL PRIMARY KEY,
     student_id bigint NULL,
-    course_grade varchar(10),
     past_course_id int NULL,
     CONSTRAINT fk_past_courses_past_course_id FOREIGN KEY(past_course_id) REFERENCES past_courses (past_course_id),
     CONSTRAINT fk_student_student_id FOREIGN KEY(student_id) REFERENCES students (student_id)

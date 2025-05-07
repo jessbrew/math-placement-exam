@@ -9,7 +9,7 @@ const first_name = ref('');
 const last_name = ref('');
 const user_code = ref('');
 const email = ref('');
-const desired_class = ref('');
+const available_course_id = ref('');
 const past_courses = ref([]);
 
 const nameRules = [
@@ -26,15 +26,16 @@ const emailRules = [
   e => /^[a-zA-Z0-9._%+-]+@mail\.wlc\.edu$/.test(e) || 'You must use a valid WLC email'
 ]
 
-const classRules = [
-  c => !!c || 'You must enter the course you wish to enroll in.'
-]
-
 const pastCourseRules = [
   p => p.length > 0 || 'Select at least one past course'
 ]
 
+const availableCourseRules = [
+  c => !!c || 'Desired course is required'
+]
+
 const pastCourseList = ref();
+const availableCoursesList = ref();
 
 const getPastCourses = async() => {
   try {
@@ -56,8 +57,29 @@ const getPastCourses = async() => {
   }
 }
 
+const getAvailableCourse = async() => {
+  try {
+    const result = await fetch(`${import.meta.env.VITE_API_URL}availableCourses`,
+    {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!result.ok) {
+          throw new Error ('Internal API error.');
+    }
+    availableCoursesList.value = await result.json();
+    availableCoursesList.value.sort((a,b) => a.display_order - b.display_order);
+
+  } catch (error) {
+      alert('An error has occurred. Please contact us if this error persists.');
+  }
+}
+
 onMounted( () => {
   getPastCourses();
+  getAvailableCourse();
 });
 
 
@@ -80,7 +102,7 @@ const submitStudentSurvey = async() => {
       last_name: last_name.value,
       user_code: user_code.value,
       email: email.value,
-      desired_class: desired_class.value,
+      available_course_id: available_course_id.value,
       past_courses: past_courses.value.map(courseId => ({past_course_id: courseId}))
     };
     const result = await fetch(`${import.meta.env.VITE_API_URL}surveySubmit`,
@@ -102,6 +124,7 @@ const submitStudentSurvey = async() => {
         store.test_id = data.test_id;
         store.name = `${first_name.value} ${last_name.value}`;
         store.time_limit = data.time_limit;
+        store.question_count = data.question_count;
 
         return true;
       }
@@ -173,12 +196,15 @@ const submitStudentSurvey = async() => {
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
-                  <v-text-field
-                    v-model="desired_class"
-                    :rules="classRules"
-                    label="Desired course to enroll in"
-                    required 
-                  ></v-text-field>
+                  <v-select
+                    v-model="available_course_id"
+                    :items="availableCoursesList"
+                    item-title="description"
+                    item-value="available_course_id"
+                    label="Select your desired course"
+                    :rules="availableCourseRules"
+                    required
+                  ></v-select>
                 </v-col>
               </v-row>
 

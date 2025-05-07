@@ -14,13 +14,6 @@ router.post("/startTest", async (req, res) => {
         }
         try {
             client = await dbConn.connect(); // Use the pg client
-            const updateQuery = `
-                        UPDATE students
-                        SET start_time = NOW()
-                        WHERE student_id = $1;
-                    `;
-            logger.info(`Updating start time for student_id: ${req.body["student_id"]}`);
-            await client.query(updateQuery, [req.body["student_id"]]);
 
             const testQuery = `
                         SELECT 
@@ -62,6 +55,14 @@ router.post("/startTest", async (req, res) => {
                     `;
             const timeLimitResult = await client.query(timeLimitQuery, [req.body["test_id"]]);
             logger.info(`Fetched time limit for test_id: ${req.body["test_id"]}`);
+
+            const updateQuery = `
+                        UPDATE students
+                        SET start_time = NOW()
+                        WHERE student_id = $1;
+                    `;
+            logger.info(`Updating start time for student_id: ${req.body["student_id"]}`);
+            await client.query(updateQuery, [req.body["student_id"]]);
 
             // Convert the questions object to an array and send the response
             const formattedQuestions = Object.values(questions);

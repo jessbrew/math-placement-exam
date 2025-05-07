@@ -6,6 +6,7 @@ export const useTestStore = defineStore('test', () => {
     // Timer logic
     const timeRemaining = ref(0);
     let interval = null;
+    const timedOut = ref(false);
 
     function startTimer(seconds) {
         timeRemaining.value = seconds;
@@ -15,7 +16,8 @@ export const useTestStore = defineStore('test', () => {
         timeRemaining.value--;
         if (timeRemaining.value <= 0) {
             clearInterval(interval);
-            testComplete();
+            timedOut.value = true;
+            //testComplete();
         }
         }, 1000);
     }
@@ -29,36 +31,6 @@ export const useTestStore = defineStore('test', () => {
     const minutes = computed(() => Math.ceil(timeRemaining.value / 60));
 
     onUnmounted(() => stopTimer());
-
-    async function testComplete() {
-        const studentStore = useStudentStore();
-        try {
-            const reqBody = {
-                student_id: studentStore.student_id,
-                status: "complete"
-            };
-    
-            const result = await fetch(`${import.meta.env.VITE_API_URL}testComplete`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(reqBody)
-            });
-    
-            if (!result.ok) {
-                throw new Error ('Internal API error.');
-            }
-            let data = await result.json();
-    
-            if (data.status === "ok") {
-                window.location.hash = '#/testcomplete';
-            }
-        } catch(error) {
-            alert('An error has occurred.');
-            console.log(error);
-        }
-    }
 
     // Test questions
     const questions = ref([]);
@@ -91,7 +63,7 @@ export const useTestStore = defineStore('test', () => {
         startTimer,
         stopTimer,
         minutes,
-        testComplete,
+        timedOut,
         questions,
         getCurrentQuestion,
         nextQuestion,
