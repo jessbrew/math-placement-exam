@@ -52,10 +52,9 @@ router.post("/testComplete", async (req, res) => {
 });
 
 const sendEmail = async(student_name) => {
-
     const {data, error} = await resend.emails.send({
         from: 'Math Placement Exam <test@mathplacementexams.com>',
-        to: [process.env.RESULT_EMAILS],
+        to: process.env.RESULT_EMAILS.split(','),
         subject: 'Math Placement Exam Taken',
         html: `The Math Placement Exam has been completed by <b>${student_name}</b>. You can verify the results <a href="mathplacementexams.com/#/admin">here</a>.`,
     });
