@@ -56,6 +56,13 @@ const currentView = computed(() => {
     <v-main class="main-content">
       <component :is="currentView" />
     </v-main>
+
+    <v-footer color="#BCBEC0" app padless>
+      <v-container class="py-4 d-flex justify-space-between align-center" fluid>
+        <p class="mb-0">© 2025 — All rights reserved.</p>
+        <a href="#/admin" class="admin-link">Admin</a>
+      </v-container>
+    </v-footer>
   </v-app>
 </template>
 
@@ -82,5 +89,15 @@ const currentView = computed(() => {
   font-family: 'Arial', sans-serif;
   font-weight: bold;
   color: #1E1E1E;
+}
+
+.admin-link {
+  font-size: 14px;
+  color: #1E1E1E;
+  text-decoration: none;
+}
+
+.admin-link:hover {
+  font-weight: bold;
 }
 </style>

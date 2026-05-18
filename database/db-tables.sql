@@ -112,3 +112,12 @@ CREATE TABLE IF NOT EXISTS student_answers
     CONSTRAINT fk_answers_answer_id FOREIGN KEY(answer_id) REFERENCES answers (answer_id),
     CONSTRAINT fk_students_student_id FOREIGN KEY(student_id) REFERENCES students (student_id)
 );
+
+-----------------------------------------------------------
+-- Create Table: admin_users
+CREATE TABLE IF NOT EXISTS admin_users (
+    admin_id SERIAL PRIMARY KEY,
+    email VARCHAR(200),
+    password_hash TEXT,
+    access_allowed BOOLEAN
+);

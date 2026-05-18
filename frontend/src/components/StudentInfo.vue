@@ -150,10 +150,8 @@ const submitStudentSurvey = async() => {
       <v-row justify="center">
         <v-col cols="12" md="10" lg="8">
           <v-card class="student-card d-flex" elevation="2" rounded="xl">
-            <!-- Green Accent Bar -->
             <div class="accent-bar"></div>
 
-            <!-- Main Content -->
             <div class="form-body px-6 py-6 flex-grow-1">
               <h2 class="text-h5 font-weight-bold mb-6">Student Information</h2>
 
