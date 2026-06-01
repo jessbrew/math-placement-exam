@@ -1,30 +1,29 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "This is a Math Placement test for WLC",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "jest --coverage",
-    "swagger-autogen": "node swagger.js",
-    "dev": "nodemon ./index.js localhost 3000"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@sequelize/core": "^7.0.0-alpha.46",
-    "@sequelize/postgres": "^7.0.0-alpha.46",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.4",
-    "express": "^4.18.2",
-    "nodemon": "^3.0.3",
-    "pg": "^8.14.1",
-    "pg-hstore": "^2.3.4",
-    "resend": "^4.5.1",
-    "sequelize": "^6.37.7",
-    "supertest": "^6.3.4",
-    "swagger-autogen": "^2.23.7",
-    "swagger-ui-express": "^5.0.0",
-    "winston": "^3.11.0"
-  }
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "This is a Math Placement test for WLC",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon ./index.js localhost 3000"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@sequelize/core": "^7.0.0-alpha.46",
+        "@sequelize/postgres": "^7.0.0-alpha.46",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.4",
+        "express": "^4.18.2",
+        "nodemon": "^3.0.3",
+        "pg": "^8.14.1",
+        "pg-hstore": "^2.3.4",
+        "resend": "^4.5.1",
+        "sequelize": "^6.37.7",
+        "supertest": "^6.3.4",
+        "swagger-autogen": "^2.23.7",
+        "swagger-jsdoc": "^6.3.0",
+        "swagger-ui-express": "^5.0.1",
+        "winston": "^3.11.0"
+    }
 }
