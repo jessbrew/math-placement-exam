@@ -17,10 +17,10 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // routes
 // TODO: update all routes to modern routing
+app.use('/health', require('./routes/health'));
 app.use('/courses', require('./routes/courses'));
 
-app.use('/', (health = require('./routes/health.js')));
-app.use('/', (testConn = require('./routes/testConnection.js')));
+// OLD
 app.use('/', (submit = require('./routes/surveySubmit.js')));
 app.use('/', (start = require('./routes/startTest.js')));
 app.use('/', (submitAnswer = require('./routes/submitAnswer.js')));
