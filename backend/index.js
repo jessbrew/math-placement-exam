@@ -1,8 +1,8 @@
-const logger = require("./logger.js");
-const app = require("../backend/server");
+const logger = require('./logger');
+const app = require('./app');
 
-//Specifying ports
-PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-    logger.info("Server is running on port:" + PORT);
+    logger.info('Server is running on port:' + PORT);
 });

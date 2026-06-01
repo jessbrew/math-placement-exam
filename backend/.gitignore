@@ -2,8 +2,6 @@
 coverage
 logger.log
 node_modules
-.prettierignore
-.prettierrc
 swagger_output.json
 ca-cert.crt
 .env.prod
