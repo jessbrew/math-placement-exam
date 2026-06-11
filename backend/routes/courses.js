@@ -1,5 +1,4 @@
 const express = require('express');
-const sql = require('pg');
 const dbConn = require('../dbconnection.js');
 const logger = require('../logger.js');
 const router = express.Router();
@@ -31,12 +30,12 @@ router.get('/available', async (req, res) => {
         if (result.rows.length === 0) {
             throw new TypeError('Content is undefined');
         }
-        res.send(result.rows);
+        res.json(result.rows);
     } catch (error) {
         logger.error(`Error: ${error}`);
         res.status(500).send({ error: 'Internal Server Error' });
     } finally {
-        client.release();
+        client?.release();
     }
 });
 
@@ -67,12 +66,12 @@ router.get('/past', async (req, res) => {
         if (result.rows.length === 0) {
             throw new TypeError('Content is undefined');
         }
-        res.send(result.rows);
+        res.json(result.rows);
     } catch (error) {
         logger.error(`Error: ${error}`);
         res.status(500).send({ error: 'Internal Server Error' });
     } finally {
-        client.release();
+        client?.release();
     }
 });
 
