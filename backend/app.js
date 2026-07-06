@@ -19,6 +19,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // TODO: update all routes to modern routing
 app.use('/health', require('./routes/health'));
 app.use('/courses', require('./routes/courses'));
+app.use('/students', require('./routes/students'));
 
 // OLD
 app.use('/', (submit = require('./routes/surveySubmit.js')));
