@@ -20,6 +20,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/health', require('./routes/health'));
 app.use('/courses', require('./routes/courses'));
 app.use('/students', require('./routes/students'));
+app.use('/admin', require('./routes/admin'));
 
 // OLD
 app.use('/', (submit = require('./routes/surveySubmit.js')));
